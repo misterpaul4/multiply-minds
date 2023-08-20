@@ -4,5 +4,6 @@ export enum slides {
 }
 
 export const config = {
-  NUM_OF_QUESTIONS: 10,
+  NUM_OF_QUESTIONS: 3,
 };
+

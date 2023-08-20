@@ -21,7 +21,7 @@ interface IProps {
 const Game = ({ slide, answer, question }: IProps) => {
   // const setRecord = useSetRecoilState(recordState);
 
-  const { goToSlide } = useContext(AnswerContext);
+  const { goToSlide, setSlide } = useContext(AnswerContext);
 
   const [canMove, setCanMove] = useState(false);
   const [isCorrect, setIsCorrect] = useState<boolean>();
@@ -29,6 +29,10 @@ const Game = ({ slide, answer, question }: IProps) => {
   const onAnswer = (value: number) => {
     setCanMove(true);
     setIsCorrect(+value === answer);
+
+    if (!(config.NUM_OF_QUESTIONS - (slide - 1))) {
+      setSlide(slide + 1);
+    }
   };
 
   return (
@@ -80,3 +84,4 @@ for (let index = 1; index < config.NUM_OF_QUESTIONS + 1; index++) {
 }
 
 export default Questions;
+
