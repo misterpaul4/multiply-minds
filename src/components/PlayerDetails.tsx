@@ -5,6 +5,7 @@ import { LeftOutlined, SendOutlined } from "@ant-design/icons";
 import { slides } from "../utils/constants";
 import { useContext } from "react";
 import AnswerContext from "../app/states/answersContext";
+import { IPlayerDetail } from "../utils/types";
 
 interface IProps {
   goToSlide: (slide: number) => void;
@@ -12,11 +13,20 @@ interface IProps {
 
 const PlayerDetails = ({ goToSlide }: IProps) => {
   const playCount = useRecoilValue(playerCountState);
-  const onAnswer = useContext(AnswerContext);
+  const { onAnswer } = useContext(AnswerContext);
 
   if (!playCount) {
     return null;
   }
+
+  const onSave = (names: string[]) => {
+    const answer: IPlayerDetail[] = names.map((name, index) => ({
+      id: index,
+      name,
+    }));
+
+    onAnswer(slides.PLAYER_DETAILS, answer);
+  };
 
   return (
     <div>
@@ -31,10 +41,7 @@ const PlayerDetails = ({ goToSlide }: IProps) => {
         layout="vertical"
         className="w-25"
         onFinish={(values) =>
-          onAnswer(
-            slides.PLAYER_DETAILS,
-            Object.values(values).map((v) => v)
-          )
+          onSave(Object.values(values as string).map((v) => v))
         }
       >
         {(() => {
@@ -78,7 +85,8 @@ const PlayerDetails = ({ goToSlide }: IProps) => {
               for (let index = 0; index < playCount; index++) {
                 playerNames.push(`Player ${index + 1}`);
               }
-              onAnswer(slides.PLAYER_DETAILS, playerNames);
+
+              onSave(playerNames);
             }}
           >
             <Button size="large">Skip</Button>

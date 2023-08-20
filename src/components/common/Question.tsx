@@ -10,6 +10,8 @@ interface IProps {
   isMultipleChoice?: boolean;
   suggestedAnswers?: IAnswer[];
   slide: number;
+  answer?: number;
+  onResponse?: (anwer: number) => void;
 }
 
 const { Item } = List;
@@ -19,8 +21,18 @@ const Question = ({
   suggestedAnswers,
   slide,
   isMultipleChoice,
+  onResponse,
+  answer,
 }: IProps) => {
-  const onAnswer = useContext(AnswerContext);
+  const { onAnswer } = useContext(AnswerContext);
+
+  const onSet = (resp: unknown) => {
+    if (typeof answer === "number") {
+      onResponse?.(resp as number);
+    } else {
+      onAnswer(slide, resp);
+    }
+  };
 
   return (
     <div>
@@ -31,14 +43,11 @@ const Question = ({
           bordered
           dataSource={suggestedAnswers}
           renderItem={(dt) => (
-            <Item onClick={() => onAnswer(slide, dt.value)}>{dt.title}</Item>
+            <Item onClick={() => onSet(dt.value)}>{dt.title}</Item>
           )}
         />
       ) : (
-        <Form
-          onFinish={(values) => onAnswer(slide, values.answer)}
-          layout="inline"
-        >
+        <Form onFinish={(values) => onSet(values.answer)} layout="inline">
           <Form.Item name="answer" className="mr-1">
             <Input required size="large" />
           </Form.Item>
