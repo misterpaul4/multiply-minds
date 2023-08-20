@@ -2,7 +2,7 @@
 import { Button, Form, Input, List, Typography } from "antd";
 import { IAnswer } from "../../utils/types";
 import { useContext } from "react";
-import AnswerContext from "../../app/context/answersContext";
+import AnswerContext from "../../app/states/answersContext";
 import { SendOutlined } from "@ant-design/icons";
 
 interface IProps {
