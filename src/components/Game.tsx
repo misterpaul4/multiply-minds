@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Alert, Button } from "antd";
+import { Alert, Button, Typography } from "antd";
 import Question from "./common/Question";
-import { useSetRecoilState } from "recoil";
-import recordState from "../app/states/recordAtom";
 import { useContext, useState } from "react";
 import {
   formatNumber,
+  getPlayerForGame,
   getQuestionAndAnswer,
   getRandomOperator,
 } from "../utils/number";
 import { config } from "../utils/constants";
 import AnswerContext from "../app/states/answersContext";
+import { playerCountState } from "../app/states/answerAtom";
+import { useRecoilValue } from "recoil";
 
 interface IProps {
   slide: number;
@@ -18,10 +19,11 @@ interface IProps {
   answer: number;
 }
 
-const Game = ({ slide, answer, question }: IProps) => {
-  // const setRecord = useSetRecoilState(recordState);
-
+export const Game = ({ slide, answer, question }: IProps) => {
   const { goToSlide, setSlide } = useContext(AnswerContext);
+  const playerCount = useRecoilValue(playerCountState);
+
+  const totalGames = (playerCount ?? 1) * config.NUM_OF_QUESTIONS;
 
   const [canMove, setCanMove] = useState(false);
   const [isCorrect, setIsCorrect] = useState<boolean>();
@@ -30,13 +32,16 @@ const Game = ({ slide, answer, question }: IProps) => {
     setCanMove(true);
     setIsCorrect(+value === answer);
 
-    if (!(config.NUM_OF_QUESTIONS - (slide - 1))) {
+    if (!(totalGames - (slide - 1))) {
       setSlide(slide + 1);
     }
   };
 
   return (
     <div className="w-50">
+      <Typography.Title level={1}>
+        Player {getPlayerForGame(slide - 1, playerCount)}
+      </Typography.Title>
       <Question
         question={question}
         slide={slide}
@@ -73,15 +78,23 @@ const Game = ({ slide, answer, question }: IProps) => {
   );
 };
 
-const Questions: React.ReactElement[] = [];
+const Questions = (total: number) => {
+  if (!total) {
+    return null;
+  }
 
-for (let index = 1; index < config.NUM_OF_QUESTIONS + 1; index++) {
-  const operator = getRandomOperator();
-  const [question, answer] = getQuestionAndAnswer({ operator });
-  Questions.push(
-    <Game answer={answer} question={question} key={index} slide={index + 1} />
-  );
-}
+  const components: React.ReactElement[] = [];
+
+  for (let index = 1; index < total * config.NUM_OF_QUESTIONS + 1; index++) {
+    const operator = getRandomOperator();
+    const [question, answer] = getQuestionAndAnswer({ operator });
+    components.push(
+      <Game answer={answer} question={question} key={index} slide={index + 1} />
+    );
+  }
+
+  return components.map((Comp) => Comp);
+};
 
 export default Questions;
 

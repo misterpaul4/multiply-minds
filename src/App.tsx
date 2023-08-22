@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Carousel, Progress } from "antd";
 import PlayerCount from "./components/PlayerCount";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CarouselRef } from "antd/es/carousel";
 import AnswerContext from "./app/states/answersContext";
 import { useRecoilState } from "recoil";
@@ -42,7 +42,10 @@ function App() {
     const dup = [...answers];
     dup[slide] = answer;
     setAnswers(dup);
-    goToSlide(slide + 1);
+
+    setTimeout(() => {
+      goToSlide(slide + 1);
+    }, 500);
   };
 
   const getpercent = () => {
@@ -53,10 +56,17 @@ function App() {
     return 0;
   };
 
+  const totalPlayers = answers[0];
+  const totalGames = (totalPlayers ?? 1) * config.NUM_OF_QUESTIONS;
+
+  const Q = useMemo(() => {
+    return Questions(totalPlayers);
+  }, [totalPlayers]);
+
   return (
     <div className="pt-2">
       <div className="content-container p-5" ref={ref}>
-        {slide > 1 && slide < config.NUM_OF_QUESTIONS + 3 && (
+        {slide > 1 && slide < totalGames + 3 && (
           <Progress
             status={slide < config.NUM_OF_QUESTIONS + 2 ? "active" : "success"}
             percent={getpercent()}
@@ -68,7 +78,7 @@ function App() {
           <Carousel ref={sliderRef} dots={false}>
             <PlayerCount />
             <PlayerDetails goToSlide={goToSlide} />
-            {Questions}
+            {Q}
             <Final />
           </Carousel>
         </AnswerContext.Provider>
