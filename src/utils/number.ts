@@ -51,6 +51,6 @@ export const formatNumber = (amount: number) => {
 
 export function getPlayerForGame(gameNumber: number, numberOfPlayers: number) {
   const playerIndex = (gameNumber - 1) % numberOfPlayers;
-  return playerIndex + 1;
+  return playerIndex;
 }
 

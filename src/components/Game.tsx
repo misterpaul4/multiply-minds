@@ -10,8 +10,9 @@ import {
 } from "../utils/number";
 import { config } from "../utils/constants";
 import AnswerContext from "../app/states/answersContext";
-import { playerCountState } from "../app/states/answerAtom";
-import { useRecoilValue } from "recoil";
+import { playerCountState, players } from "../app/states/answerAtom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import recordState from "../app/states/recordAtom";
 
 interface IProps {
   slide: number;
@@ -22,26 +23,30 @@ interface IProps {
 export const Game = ({ slide, answer, question }: IProps) => {
   const { goToSlide, setSlide } = useContext(AnswerContext);
   const playerCount = useRecoilValue(playerCountState);
-
-  const totalGames = (playerCount ?? 1) * config.NUM_OF_QUESTIONS;
+  const playerDetails = useRecoilValue(players) ?? [];
+  const setRecord = useSetRecoilState(recordState);
 
   const [canMove, setCanMove] = useState(false);
   const [isCorrect, setIsCorrect] = useState<boolean>();
 
-  const onAnswer = (value: number) => {
-    setCanMove(true);
-    setIsCorrect(+value === answer);
+  const playerIndex = getPlayerForGame(slide - 1, playerCount);
+  const currentPlayer = playerDetails?.[playerIndex]?.name;
 
-    if (!(totalGames - (slide - 1))) {
-      setSlide(slide + 1);
-    }
+  const onAnswer = (value: number) => {
+    value = +value;
+    setCanMove(true);
+    setIsCorrect(value === answer);
+    setRecord((current) => [
+      ...current,
+      { answer, playerId: playerDetails[playerIndex].id, question, value },
+    ]);
+
+    setSlide(slide + 1);
   };
 
   return (
     <div className="w-50">
-      <Typography.Title level={1}>
-        Player {getPlayerForGame(slide - 1, playerCount)}
-      </Typography.Title>
+      <Typography.Title level={1}>{currentPlayer}</Typography.Title>
       <Question
         question={question}
         slide={slide}
