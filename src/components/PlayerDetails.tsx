@@ -1,5 +1,5 @@
-import { useRecoilValue } from "recoil";
-import { playerCountState } from "../app/states/answerAtom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import answerState, { playerCountState } from "../app/states/answerAtom";
 import { Button, Form, Input, Popconfirm, Space, Typography } from "antd";
 import { LeftOutlined, SendOutlined } from "@ant-design/icons";
 import { slides } from "../utils/constants";
@@ -7,13 +7,10 @@ import { useContext } from "react";
 import AnswerContext from "../app/states/answersContext";
 import { IPlayerDetail } from "../utils/types";
 
-interface IProps {
-  goToSlide: (slide: number) => void;
-}
-
-const PlayerDetails = ({ goToSlide }: IProps) => {
+const PlayerDetails = () => {
   const playCount = useRecoilValue(playerCountState);
-  const { onAnswer } = useContext(AnswerContext);
+  const setGameConfig = useSetRecoilState(answerState);
+  const { goToSlide } = useContext(AnswerContext);
 
   if (!playCount) {
     return null;
@@ -25,7 +22,8 @@ const PlayerDetails = ({ goToSlide }: IProps) => {
       name,
     }));
 
-    onAnswer(slides.PLAYER_DETAILS, answer);
+    setGameConfig((current) => ({ ...current, playerDetails: answer }));
+    goToSlide(slides.PLAYER_DETAILS + 1);
   };
 
   return (

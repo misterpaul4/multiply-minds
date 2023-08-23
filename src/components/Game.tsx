@@ -47,12 +47,7 @@ export const Game = ({ slide, answer, question }: IProps) => {
   return (
     <div className="w-50">
       <Typography.Title level={1}>{currentPlayer}</Typography.Title>
-      <Question
-        question={question}
-        slide={slide}
-        answer={answer}
-        onResponse={onAnswer}
-      />
+      <Question question={question} answer={answer} onAnswer={onAnswer} />
       {canMove && (
         <Alert
           type={isCorrect ? "success" : "error"}
@@ -84,10 +79,6 @@ export const Game = ({ slide, answer, question }: IProps) => {
 };
 
 const Questions = (total: number) => {
-  if (!total) {
-    return null;
-  }
-
   const components: React.ReactElement[] = [];
 
   for (let index = 1; index < total * config.NUM_OF_QUESTIONS + 1; index++) {

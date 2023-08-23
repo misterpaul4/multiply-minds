@@ -1,6 +1,10 @@
 import Question from "./common/Question";
 import { IAnswer } from "../utils/types";
 import { slides } from "../utils/constants";
+import { useSetRecoilState } from "recoil";
+import answerState from "../app/states/answerAtom";
+import { useContext } from "react";
+import AnswerContext from "../app/states/answersContext";
 
 const PlayerCount = () => {
   const values: IAnswer[] = [
@@ -10,11 +14,20 @@ const PlayerCount = () => {
     { title: "4 Players", value: 4 },
   ];
 
+  const setGameConfig = useSetRecoilState(answerState);
+  const goToSlide = useContext(AnswerContext).goToSlide;
+
   return (
     <Question
       question="How Many Players"
       suggestedAnswers={values}
-      slide={slides.PLAYER_COUNT}
+      onAnswer={(answer) => {
+        setGameConfig((current) => ({
+          ...current,
+          playerCount: answer as number,
+        }));
+        goToSlide(slides.PLAYER_DETAILS, true);
+      }}
       isMultipleChoice
     />
   );

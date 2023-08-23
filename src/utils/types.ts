@@ -16,3 +16,8 @@ export interface IPlayerDetail {
   id: number;
   name: string;
 }
+
+export interface IGameConfig {
+  playerDetails: IPlayerDetail[];
+  playerCount: number;
+}

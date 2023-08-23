@@ -1,13 +1,11 @@
 import React from "react";
 
 interface IInitialValue {
-  onAnswer: (slide: number, answer: unknown) => void;
-  goToSlide: (slide: number) => void;
+  goToSlide: (slide: number, delay?: boolean) => void;
   setSlide: (slide: number) => void;
 }
 
 const initialValue: IInitialValue = {
-  onAnswer() {},
   goToSlide() {},
   setSlide() {},
 };

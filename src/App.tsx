@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Carousel, Progress } from "antd";
+import { Button, Carousel, Progress } from "antd";
 import PlayerCount from "./components/PlayerCount";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CarouselRef } from "antd/es/carousel";
@@ -13,8 +14,7 @@ import Final from "./components/Final";
 import recordState from "./app/states/recordAtom";
 
 function App() {
-  const [answers, setAnswers] = useRecoilState(answerState);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [gameConfig, setGameConfig] = useRecoilState(answerState);
   const [record] = useRecoilState(recordState);
 
   const [slide, setSlide] = useState(0);
@@ -37,22 +37,19 @@ function App() {
 
   const sliderRef = useRef<CarouselRef>(null);
 
-  const goToSlide = (slide: number) => {
-    setSlide(slide);
-    sliderRef.current?.goTo(slide);
+  const goToSlide = (slide: number, delay = false) => {
+    if (delay) {
+      setTimeout(() => {
+        setSlide(slide);
+        sliderRef.current?.goTo(slide);
+      }, 500);
+    } else {
+      setSlide(slide);
+      sliderRef.current?.goTo(slide);
+    }
   };
 
-  const onAnswer = (slide: number, answer: any) => {
-    const dup = [...answers];
-    dup[slide] = answer;
-    setAnswers(dup);
-
-    setTimeout(() => {
-      goToSlide(slide + 1);
-    }, 800);
-  };
-
-  const totalPlayers = answers[0];
+  const totalPlayers = gameConfig.playerCount ?? 0;
   const totalGames = (totalPlayers ?? 1) * config.NUM_OF_QUESTIONS;
 
   const getpercent = () => {
@@ -69,6 +66,7 @@ function App() {
 
   return (
     <div className="pt-2">
+      <Button onClick={() => goToSlide(2 + totalGames)}>Jump to last</Button>
       <div className="content-container p-5" ref={ref}>
         {slide > 1 && slide < totalGames + 3 && (
           <Progress
@@ -78,10 +76,14 @@ function App() {
             showInfo={false}
           />
         )}
-        <AnswerContext.Provider value={{ goToSlide, onAnswer, setSlide }}>
-          <Carousel ref={sliderRef} dots={false}>
+        <AnswerContext.Provider value={{ goToSlide, setSlide }}>
+          <Carousel
+            ref={sliderRef}
+            dots={false}
+            effect={slide > 1 ? "scrollx" : "fade"}
+          >
             <PlayerCount />
-            <PlayerDetails goToSlide={goToSlide} />
+            <PlayerDetails />
             {Q}
             <Final />
           </Carousel>
