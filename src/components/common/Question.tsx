@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Form, Input, List, Typography } from "antd";
+import { Button, Form, Input, List, Space, Typography } from "antd";
 import { IAnswer } from "../../utils/types";
 import { SendOutlined } from "@ant-design/icons";
 
@@ -33,16 +33,18 @@ const Question = ({
         />
       ) : (
         <Form onFinish={(values) => onAnswer(values.answer)} layout="inline">
-          <Form.Item name="answer" className="mr-1">
-            <Input required size="large" />
-          </Form.Item>
-          <Button
-            htmlType="submit"
-            title="Submit"
-            icon={<SendOutlined />}
-            size="large"
-            type="primary"
-          />
+          <Space className="w-100">
+            <Form.Item name="answer" className="mr-1">
+              <Input required size="large" />
+            </Form.Item>
+            <Button
+              htmlType="submit"
+              title="Submit"
+              icon={<SendOutlined />}
+              size="large"
+              type="primary"
+            />
+          </Space>
         </Form>
       )}
     </div>

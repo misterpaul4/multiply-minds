@@ -23,7 +23,7 @@ const PlayerDetails = () => {
     }));
 
     setGameConfig((current) => ({ ...current, playerDetails: answer }));
-    goToSlide(slides.PLAYER_DETAILS + 1);
+    goToSlide(slides.PLAYER_DETAILS + 1, false, true);
   };
 
   return (

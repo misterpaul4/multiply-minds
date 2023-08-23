@@ -12,6 +12,7 @@ import Questions from "./components/Game";
 import { config } from "./utils/constants";
 import Final from "./components/Final";
 import recordState from "./app/states/recordAtom";
+import Countdown from "react-countdown";
 
 function App() {
   const [gameConfig, setGameConfig] = useRecoilState(answerState);
@@ -20,6 +21,8 @@ function App() {
   const [slide, setSlide] = useState(0);
 
   const ref = useRef<HTMLDivElement>(null);
+
+  const countdownRef = useRef<Countdown>(null);
 
   useEffect(() => {
     const removeDefaultTabbehaviour = (e: KeyboardEvent) => {
@@ -37,20 +40,29 @@ function App() {
 
   const sliderRef = useRef<CarouselRef>(null);
 
-  const goToSlide = (slide: number, delay = false) => {
+  const totalPlayers = gameConfig.playerCount ?? 0;
+  const totalGames = (totalPlayers ?? 1) * config.NUM_OF_QUESTIONS;
+
+  const gameRunning = slide > 1 && slide < totalGames + 3;
+
+  const startCT = () => countdownRef.current?.start();
+
+  const stopCT = () => countdownRef.current?.stop();
+
+  const goToSlide = (slide: number, delay = false, startCountDown = false) => {
     if (delay) {
       setTimeout(() => {
         setSlide(slide);
         sliderRef.current?.goTo(slide);
-      }, 500);
+      }, 800);
     } else {
       setSlide(slide);
       sliderRef.current?.goTo(slide);
+      setTimeout(() => {
+        startCountDown && startCT();
+      }, 200);
     }
   };
-
-  const totalPlayers = gameConfig.playerCount ?? 0;
-  const totalGames = (totalPlayers ?? 1) * config.NUM_OF_QUESTIONS;
 
   const getpercent = () => {
     if (slide > 1) {
@@ -66,17 +78,29 @@ function App() {
 
   return (
     <div className="pt-2">
-      <Button onClick={() => goToSlide(2 + totalGames)}>Jump to last</Button>
+      {/* <Button onClick={() => goToSlide(2 + totalGames)}>Jump to last</Button> */}
       <div className="content-container p-5" ref={ref}>
-        {slide > 1 && slide < totalGames + 3 && (
-          <Progress
-            status={slide < totalGames + 2 ? "active" : "success"}
-            percent={getpercent()}
-            className="progress mb-4"
-            showInfo={false}
-          />
+        {gameRunning && (
+          <>
+            <Progress
+              status={slide < totalGames + 2 ? "active" : "success"}
+              percent={getpercent()}
+              className="progress mb-4"
+              showInfo={false}
+            />
+            <Countdown
+              className="text-danger fs-2"
+              ref={countdownRef}
+              autoStart={false}
+              daysInHours
+              date={Date.now() + 10000}
+            />
+          </>
         )}
-        <AnswerContext.Provider value={{ goToSlide, setSlide }}>
+
+        <AnswerContext.Provider
+          value={{ goToSlide, setSlide, startCT, stopCT }}
+        >
           <Carousel
             ref={sliderRef}
             dots={false}

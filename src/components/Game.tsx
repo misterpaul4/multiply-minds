@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Alert, Button, Typography } from "antd";
 import Question from "./common/Question";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import {
   formatNumber,
   getPlayerForGame,
@@ -13,6 +13,7 @@ import AnswerContext from "../app/states/answersContext";
 import { playerCountState, players } from "../app/states/answerAtom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import recordState from "../app/states/recordAtom";
+import Countdown from "react-countdown";
 
 interface IProps {
   slide: number;
@@ -21,7 +22,7 @@ interface IProps {
 }
 
 export const Game = ({ slide, answer, question }: IProps) => {
-  const { goToSlide, setSlide } = useContext(AnswerContext);
+  const { goToSlide, setSlide, stopCT } = useContext(AnswerContext);
   const playerCount = useRecoilValue(playerCountState);
   const playerDetails = useRecoilValue(players) ?? [];
   const setRecord = useSetRecoilState(recordState);
@@ -33,6 +34,7 @@ export const Game = ({ slide, answer, question }: IProps) => {
   const currentPlayer = playerDetails?.[playerIndex]?.name;
 
   const onAnswer = (value: number) => {
+    stopCT();
     value = +value;
     setCanMove(true);
     setIsCorrect(value === answer);
@@ -68,7 +70,7 @@ export const Game = ({ slide, answer, question }: IProps) => {
       <Button
         size="large"
         type="primary"
-        onClick={() => canMove && goToSlide(slide + 1)}
+        onClick={() => canMove && goToSlide(slide + 1, false, true)}
         className="mt-4"
         disabled={!canMove}
       >
