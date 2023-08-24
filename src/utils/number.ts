@@ -90,3 +90,19 @@ export function calculatePercentageCorrect(
   return playerStats;
 }
 
+export function getWinnerPlayerIds(playerStats: PlayerStats[]): number[] {
+  const winnerPlayerIds: number[] = [];
+  let highestPercentage = 0;
+
+  playerStats.forEach(playerStat => {
+      if (playerStat.percentageCorrect > highestPercentage) {
+          highestPercentage = playerStat.percentageCorrect;
+          winnerPlayerIds.length = 0; // Clear previous winners
+          winnerPlayerIds.push(playerStat.playerId);
+      } else if (playerStat.percentageCorrect === highestPercentage && highestPercentage !== 0) {
+          winnerPlayerIds.push(playerStat.playerId);
+      }
+  });
+
+  return winnerPlayerIds;
+}

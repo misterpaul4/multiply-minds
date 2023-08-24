@@ -31,3 +31,7 @@ export interface PlayerStats {
   playerName: string;
 }
 
+export interface IPlayerTimeLine {
+  result: IQuestionAnswer[];
+  playerName: string;
+}
