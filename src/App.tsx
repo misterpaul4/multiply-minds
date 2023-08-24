@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Carousel, Progress } from "antd";
+import { Carousel, Progress } from "antd";
 import PlayerCount from "./components/PlayerCount";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CarouselRef } from "antd/es/carousel";
@@ -9,13 +7,11 @@ import { useRecoilState } from "recoil";
 import PlayerDetails from "./components/PlayerDetails";
 import answerState from "./app/states/answerAtom";
 import Questions from "./components/Game";
-import { config } from "./utils/constants";
+import { config, slides } from "./utils/constants";
 import Final from "./components/Final";
-import recordState from "./app/states/recordAtom";
 
 function App() {
-  const [gameConfig, setGameConfig] = useRecoilState(answerState);
-  const [record] = useRecoilState(recordState);
+  const [gameConfig] = useRecoilState(answerState);
 
   const [slide, setSlide] = useState(0);
 
@@ -40,7 +36,7 @@ function App() {
   const totalPlayers = gameConfig.playerCount ?? 0;
   const totalGames = (totalPlayers ?? 1) * config.NUM_OF_QUESTIONS;
 
-  const gameRunning = slide > 1 && slide < totalGames + 3;
+  const gameRunning = slide > slides.PLAYER_DETAILS && slide < totalGames + 3;
 
   const nextSlide = (delay = false) => {
     if (delay) {
@@ -59,13 +55,14 @@ function App() {
     sliderRef.current?.prev();
   };
 
-  const goToSlide = (slide: number) => {
-    //
+  const goToSlide = (val: number) => {
+    setSlide(val);
+    sliderRef.current?.goTo(val);
   };
 
   const getpercent = () => {
-    if (slide > 1) {
-      return ((slide - 2) / totalGames) * 100;
+    if (slide > slides.PLAYER_DETAILS) {
+      return ((slide - slides.GAME_START) / totalGames) * 100;
     }
 
     return 0;
@@ -77,12 +74,13 @@ function App() {
 
   return (
     <div className="pt-2">
-      {/* <Button onClick={() => goToSlide(2 + totalGames)}>Jump to last</Button> */}
       <div className="content-container p-5" ref={ref}>
         {gameRunning && (
           <>
             <Progress
-              status={slide < totalGames + 2 ? "active" : "success"}
+              status={
+                slide < totalGames + slides.GAME_START ? "active" : "success"
+              }
               percent={getpercent()}
               className="progress mb-4"
               showInfo={false}

@@ -4,6 +4,7 @@ import { useSetRecoilState } from "recoil";
 import answerState from "../app/states/answerAtom";
 import { useContext } from "react";
 import AnswerContext from "../app/states/answersContext";
+import { config, slides } from "../utils/constants";
 
 const PlayerCount = () => {
   const values: IAnswer[] = [
@@ -25,6 +26,8 @@ const PlayerCount = () => {
           ...current,
           playerCount: answer as number,
         }));
+        slides.RESULT =
+          slides.PLAYER_DETAILS + 1 + answer * config.NUM_OF_QUESTIONS;
         nextSlide(true);
       }}
       isMultipleChoice

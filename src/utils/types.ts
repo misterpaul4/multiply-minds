@@ -10,6 +10,7 @@ export interface IQuestionAnswer {
   answer: number;
   value?: number;
   playerId: number;
+  name: string;
 }
 
 export interface IPlayerDetail {
@@ -20,5 +21,13 @@ export interface IPlayerDetail {
 export interface IGameConfig {
   playerDetails: IPlayerDetail[];
   playerCount: number;
+}
+
+export interface PlayerStats {
+  playerId: number;
+  correctAnswers: number;
+  totalAnswers: number;
+  percentageCorrect: number;
+  playerName: string;
 }
 

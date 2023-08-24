@@ -1,4 +1,4 @@
-import { $operators } from "./types";
+import { $operators, IQuestionAnswer, PlayerStats } from "./types";
 
 export function generateRandomNumberInRange(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -52,5 +52,41 @@ export const formatNumber = (amount: number) => {
 export function getPlayerForGame(gameNumber: number, numberOfPlayers: number) {
   const playerIndex = (gameNumber - 1) % numberOfPlayers;
   return playerIndex;
+}
+
+export function calculatePercentageCorrect(
+  data: IQuestionAnswer[]
+): PlayerStats[] {
+  const playerStatsMap: Map<number, PlayerStats> = new Map();
+
+  // Iterate through the data and update player stats
+  data.forEach((question) => {
+    const playerStat = playerStatsMap.get(question.playerId) || {
+      playerId: question.playerId,
+      correctAnswers: 0,
+      totalAnswers: 0,
+      percentageCorrect: 0,
+      playerName: question.name,
+    };
+
+    if (question.value !== undefined && question.answer === question.value) {
+      playerStat.correctAnswers++;
+    }
+
+    playerStat.totalAnswers++;
+    playerStatsMap.set(question.playerId, playerStat);
+  });
+
+  // Calculate the percentage of correct answers for each player
+  const playerStats: PlayerStats[] = Array.from(playerStatsMap.values()).map(
+    (playerStat) => {
+      playerStat.percentageCorrect = Math.round(
+        (playerStat.correctAnswers / playerStat.totalAnswers) * 100
+      );
+      return playerStat;
+    }
+  );
+
+  return playerStats;
 }
 

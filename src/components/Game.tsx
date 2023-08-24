@@ -51,7 +51,13 @@ export const Game = ({ gameNumber, answer, question }: IProps) => {
     setCanMove(true);
     setRecord((current) => [
       ...current,
-      { answer, playerId: playerDetails[playerIndex].id, question, value },
+      {
+        answer,
+        playerId: playerDetails[playerIndex].id,
+        question,
+        value,
+        name: currentPlayer,
+      },
     ]);
   };
 
@@ -117,7 +123,18 @@ export const Game = ({ gameNumber, answer, question }: IProps) => {
         type="primary"
         onClick={() => {
           if (canMove || timeFinished) {
-            setTimeFinished(false);
+            if (timeFinished) {
+              setTimeFinished(false);
+              setRecord((current) => [
+                ...current,
+                {
+                  answer,
+                  playerId: playerDetails[playerIndex].id,
+                  question,
+                  name: currentPlayer,
+                },
+              ]);
+            }
             nextSlide();
           }
         }}
