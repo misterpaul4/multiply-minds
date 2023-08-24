@@ -1,17 +1,17 @@
 import React from "react";
 
 interface IInitialValue {
-  goToSlide: (slide: number, delay?: boolean, startCountDown?: boolean) => void;
-  setSlide: (slide: number) => void;
-  startCT: () => void;
-  stopCT: () => void;
+  goToSlide: (slide: number) => void;
+  nextSlide: (delay?: boolean) => void;
+  prevSlide: () => void;
+  currentSlide: number;
 }
 
 const initialValue: IInitialValue = {
   goToSlide() {},
-  setSlide() {},
-  startCT() {},
-  stopCT() {},
+  nextSlide() {},
+  prevSlide() {},
+  currentSlide: 0,
 };
 
 const AnswerContext = React.createContext(initialValue);

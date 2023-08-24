@@ -2,7 +2,6 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import answerState, { playerCountState } from "../app/states/answerAtom";
 import { Button, Form, Input, Popconfirm, Space, Typography } from "antd";
 import { LeftOutlined, SendOutlined } from "@ant-design/icons";
-import { slides } from "../utils/constants";
 import { useContext } from "react";
 import AnswerContext from "../app/states/answersContext";
 import { IPlayerDetail } from "../utils/types";
@@ -10,7 +9,7 @@ import { IPlayerDetail } from "../utils/types";
 const PlayerDetails = () => {
   const playCount = useRecoilValue(playerCountState);
   const setGameConfig = useSetRecoilState(answerState);
-  const { goToSlide } = useContext(AnswerContext);
+  const { nextSlide, prevSlide } = useContext(AnswerContext);
 
   if (!playCount) {
     return null;
@@ -23,16 +22,12 @@ const PlayerDetails = () => {
     }));
 
     setGameConfig((current) => ({ ...current, playerDetails: answer }));
-    goToSlide(slides.PLAYER_DETAILS + 1, false, true);
+    nextSlide();
   };
 
   return (
     <div>
-      <Button
-        icon={<LeftOutlined />}
-        type="text"
-        onClick={() => goToSlide(slides.PLAYER_COUNT)}
-      >
+      <Button icon={<LeftOutlined />} type="text" onClick={() => prevSlide()}>
         Go Back
       </Button>
       <Form

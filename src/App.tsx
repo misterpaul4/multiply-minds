@@ -12,7 +12,6 @@ import Questions from "./components/Game";
 import { config } from "./utils/constants";
 import Final from "./components/Final";
 import recordState from "./app/states/recordAtom";
-import Countdown from "react-countdown";
 
 function App() {
   const [gameConfig, setGameConfig] = useRecoilState(answerState);
@@ -21,8 +20,6 @@ function App() {
   const [slide, setSlide] = useState(0);
 
   const ref = useRef<HTMLDivElement>(null);
-
-  const countdownRef = useRef<Countdown>(null);
 
   useEffect(() => {
     const removeDefaultTabbehaviour = (e: KeyboardEvent) => {
@@ -45,23 +42,25 @@ function App() {
 
   const gameRunning = slide > 1 && slide < totalGames + 3;
 
-  const startCT = () => countdownRef.current?.start();
-
-  const stopCT = () => countdownRef.current?.stop();
-
-  const goToSlide = (slide: number, delay = false, startCountDown = false) => {
+  const nextSlide = (delay = false) => {
     if (delay) {
       setTimeout(() => {
-        setSlide(slide);
-        sliderRef.current?.goTo(slide);
+        setSlide((current) => current + 1);
+        sliderRef.current?.next();
       }, 800);
     } else {
-      setSlide(slide);
-      sliderRef.current?.goTo(slide);
-      setTimeout(() => {
-        startCountDown && startCT();
-      }, 200);
+      setSlide((current) => current + 1);
+      sliderRef.current?.next();
     }
+  };
+
+  const prevSlide = () => {
+    setSlide((current) => current - 1);
+    sliderRef.current?.prev();
+  };
+
+  const goToSlide = (slide: number) => {
+    //
   };
 
   const getpercent = () => {
@@ -88,18 +87,16 @@ function App() {
               className="progress mb-4"
               showInfo={false}
             />
-            <Countdown
-              className="text-danger fs-2"
-              ref={countdownRef}
-              autoStart={false}
-              daysInHours
-              date={Date.now() + 10000}
-            />
           </>
         )}
 
         <AnswerContext.Provider
-          value={{ goToSlide, setSlide, startCT, stopCT }}
+          value={{
+            goToSlide,
+            nextSlide,
+            prevSlide,
+            currentSlide: slide,
+          }}
         >
           <Carousel
             ref={sliderRef}

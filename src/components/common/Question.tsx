@@ -2,6 +2,7 @@
 import { Button, Form, Input, List, Space, Typography } from "antd";
 import { IAnswer } from "../../utils/types";
 import { SendOutlined } from "@ant-design/icons";
+import { useState } from "react";
 
 interface IProps {
   question: string;
@@ -9,6 +10,7 @@ interface IProps {
   suggestedAnswers?: IAnswer[];
   answer?: number;
   onAnswer: (answer: any) => void;
+  timeFinished?: boolean;
 }
 
 const { Item } = List;
@@ -18,7 +20,9 @@ const Question = ({
   suggestedAnswers,
   isMultipleChoice,
   onAnswer,
+  timeFinished,
 }: IProps) => {
+  const [inputDisable, setInputDisable] = useState(false);
   return (
     <div>
       <Typography.Title level={4}>{question}</Typography.Title>
@@ -32,7 +36,14 @@ const Question = ({
           )}
         />
       ) : (
-        <Form onFinish={(values) => onAnswer(values.answer)} layout="inline">
+        <Form
+          onFinish={(values) => {
+            onAnswer(values.answer);
+            setInputDisable(true);
+          }}
+          layout="inline"
+          disabled={inputDisable || timeFinished}
+        >
           <Space className="w-100">
             <Form.Item name="answer" className="mr-1">
               <Input required size="large" />

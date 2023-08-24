@@ -8,7 +8,7 @@ export type $operators = "add" | "subtract" | "multiply";
 export interface IQuestionAnswer {
   question: string;
   answer: number;
-  value: number;
+  value?: number;
   playerId: number;
 }
 
@@ -21,3 +21,4 @@ export interface IGameConfig {
   playerDetails: IPlayerDetail[];
   playerCount: number;
 }
+

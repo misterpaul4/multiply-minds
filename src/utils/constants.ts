@@ -7,3 +7,5 @@ export const config = {
   NUM_OF_QUESTIONS: 3,
 };
 
+export const gameDurationInSeconds = 10 * 1000; // 10 seconds
+

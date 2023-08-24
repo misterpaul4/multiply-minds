@@ -1,6 +1,5 @@
 import Question from "./common/Question";
 import { IAnswer } from "../utils/types";
-import { slides } from "../utils/constants";
 import { useSetRecoilState } from "recoil";
 import answerState from "../app/states/answerAtom";
 import { useContext } from "react";
@@ -15,7 +14,7 @@ const PlayerCount = () => {
   ];
 
   const setGameConfig = useSetRecoilState(answerState);
-  const goToSlide = useContext(AnswerContext).goToSlide;
+  const nextSlide = useContext(AnswerContext).nextSlide;
 
   return (
     <Question
@@ -26,7 +25,7 @@ const PlayerCount = () => {
           ...current,
           playerCount: answer as number,
         }));
-        goToSlide(slides.PLAYER_DETAILS, true);
+        nextSlide(true);
       }}
       isMultipleChoice
     />
