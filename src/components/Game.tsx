@@ -133,7 +133,7 @@ export const Game = ({ gameNumber, answer, question }: IProps) => {
 const Questions = (total: number) => {
   const components: React.ReactElement[] = [];
 
-  for (let index = 1; index < total * config.NUM_OF_QUESTIONS; index++) {
+  for (let index = 1; index < total * config.NUM_OF_QUESTIONS + 1; index++) {
     const operator = getRandomOperator();
     const [question, answer] = getQuestionAndAnswer({ operator });
     components.push(
