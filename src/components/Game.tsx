@@ -82,38 +82,41 @@ export const Game = ({ gameNumber, answer, question }: IProps) => {
         onAnswer={onAnswer}
         timeFinished={timeFinished}
       />
-      {canMove ||
-        (timeFinished && (
-          <Alert
-            type={isCorrect ? "success" : "error"}
-            className="mt-3"
-            message={
-              isCorrect ? (
-                "Correct"
-              ) : (
-                <span>
-                  {timeFinished ? (
-                    <>
-                      You ran out of time!. Answer is{" "}
-                      <strong>{formatNumber(answer)}</strong>
-                    </>
-                  ) : (
-                    <>
-                      Wrong!. correct answer is{" "}
-                      <strong>{formatNumber(answer)}</strong>
-                    </>
-                  )}
-                </span>
-              )
-            }
-            showIcon
-          />
-        ))}
+      {canMove && (
+        <Alert
+          type={isCorrect ? "success" : "error"}
+          className="mt-3"
+          message={
+            isCorrect ? (
+              "Correct"
+            ) : (
+              <span>
+                Wrong!. correct answer is{" "}
+                <strong>{formatNumber(answer)}</strong>
+              </span>
+            )
+          }
+          showIcon
+        />
+      )}
+
+      {timeFinished && (
+        <Alert
+          type="warning"
+          className="mt-3"
+          message={
+            <span>
+              You ran out of time!. Answer is{" "}
+              <strong>{formatNumber(answer)}</strong>
+            </span>
+          }
+        />
+      )}
       <Button
         size="large"
         type="primary"
         onClick={() => {
-          if (canMove) {
+          if (canMove || timeFinished) {
             setTimeFinished(false);
             nextSlide();
           }
