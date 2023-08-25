@@ -15,7 +15,7 @@ export const getQuestionAndAnswer: (arg: IParams) => [string, number] = ({
   let num1 = generateRandomNumberInRange(2, 100);
   let num2 = generateRandomNumberInRange(2, 100);
 
-  if (num1 < num2) {
+  if (operator === "multiply" && num1 < num2) {
     const temp = num1;
     num1 = num2;
     num2 = temp;
