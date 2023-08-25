@@ -88,7 +88,7 @@ export const Game = ({ gameNumber, answer, question }: IProps) => {
   };
 
   return (
-    <div className="w-50">
+    <div>
       <Space align="center" className="countdown-container">
         <Icon
           style={{ fontSize: "2rem" }}

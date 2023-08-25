@@ -36,6 +36,7 @@ const AnswerConfig = ({ rec }: { rec: IQuestionAnswer }) => {
 const PlayerTimeLine = ({ result }: IProps) => {
   return (
     <Timeline
+      className="timeline-content"
       mode="alternate"
       items={result.map((rec, index) => {
         return {

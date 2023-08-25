@@ -72,7 +72,7 @@ function App() {
   };
 
   return (
-    <div className="pt-2">
+    <div className="pt-2" style={{ display: "grid", placeItems: "center" }}>
       <div className="content-container p-5" ref={ref}>
         {gameRunning && (
           <>

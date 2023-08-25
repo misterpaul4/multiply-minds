@@ -69,6 +69,7 @@ const Final = () => {
         okButtonProps={{ className: "d-none" }}
         open={!!viewTimeLine}
         onCancel={() => setViewTimeLine(undefined)}
+        cancelButtonProps={{ className: "d-none" }}
         title={
           <Typography.Title level={4}>
             {viewTimeLine?.playerName}
