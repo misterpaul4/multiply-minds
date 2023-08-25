@@ -1,3 +1,5 @@
+import React from "react";
+
 export interface IAnswer {
   title: string;
   value: unknown;
@@ -21,6 +23,8 @@ export interface IPlayerDetail {
 export interface IGameConfig {
   playerDetails: IPlayerDetail[];
   playerCount: number;
+  gameCount: number;
+  Questions: React.ReactElement[];
 }
 
 export interface PlayerStats {
@@ -35,3 +39,4 @@ export interface IPlayerTimeLine {
   result: IQuestionAnswer[];
   playerName: string;
 }
+

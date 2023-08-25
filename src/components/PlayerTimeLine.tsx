@@ -15,8 +15,12 @@ const AnswerConfig = ({ rec }: { rec: IQuestionAnswer }) => {
     );
   }
 
-  if (rec.answer === undefined) {
-    return <Tag color="warning">Timeout!. Answer should be {rec.answer}</Tag>;
+  if (rec.value === undefined) {
+    return (
+      <Tag color="warning">
+        Timeout!. Answer should be <strong>{rec.answer}</strong>
+      </Tag>
+    );
   }
 
   return (
@@ -33,12 +37,12 @@ const PlayerTimeLine = ({ result }: IProps) => {
   return (
     <Timeline
       mode="alternate"
-      items={result.map((rec) => {
+      items={result.map((rec, index) => {
         return {
           children: (
             <div>
               <p>
-                <strong>Q</strong>: {rec.question}
+                <strong>Q{index + 1}</strong>: {rec.question}
               </p>
               <p>
                 <AnswerConfig rec={rec} />

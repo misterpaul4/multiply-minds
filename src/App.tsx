@@ -1,12 +1,11 @@
 import { Carousel, Progress } from "antd";
 import PlayerCount from "./components/PlayerCount";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CarouselRef } from "antd/es/carousel";
 import AnswerContext from "./app/states/answersContext";
 import { useRecoilState } from "recoil";
 import PlayerDetails from "./components/PlayerDetails";
 import answerState from "./app/states/answerAtom";
-import Questions from "./components/Game";
 import { config, slides } from "./utils/constants";
 import Final from "./components/Final";
 
@@ -68,10 +67,6 @@ function App() {
     return 0;
   };
 
-  const Q = useMemo(() => {
-    return Questions(totalPlayers);
-  }, [totalPlayers]);
-
   return (
     <div className="pt-2">
       <div className="content-container p-5" ref={ref}>
@@ -103,7 +98,7 @@ function App() {
           >
             <PlayerCount />
             <PlayerDetails />
-            {Q}
+            {gameConfig.Questions}
             <Final />
           </Carousel>
         </AnswerContext.Provider>

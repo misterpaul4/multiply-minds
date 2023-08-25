@@ -20,16 +20,19 @@ import {
 } from "../utils/number";
 import PlayerTimeLine from "./PlayerTimeLine";
 import { IPlayerTimeLine } from "../utils/types";
+import answerState, { playerCountState } from "../app/states/answerAtom";
+import Questions from "./Game";
 
 const Final = () => {
   const setRecord = useSetRecoilState(recordState);
+  const setConfig = useSetRecoilState(answerState);
   const records = useRecoilValue(getRecords);
-  const { currentSlide } = useContext(AnswerContext);
+  const { currentSlide, goToSlide } = useContext(AnswerContext);
   const inLastSlide = currentSlide === slides.RESULT;
+  const playerCount = useRecoilValue(playerCountState);
 
   const stats = useMemo(() => {
     if (inLastSlide) {
-      console.log("xx CALCULATING STATS");
       return calculatePercentageCorrect(records);
     }
     return [];
@@ -37,7 +40,6 @@ const Final = () => {
 
   const winners = useMemo(() => {
     if (stats.length) {
-      console.log("xx CALCULATING WINNERS");
       return getWinnerPlayerIds(stats);
     }
 
@@ -75,10 +77,14 @@ const Final = () => {
       <Typography.Title>Report</Typography.Title>
       <div className="font-italic report-card">
         <p>- {records.length} total questions</p>
-        {stats.length > 1 && (
-          <p>- {records.length / stats.length} questions each</p>
+        {playerCount > 1 && (
+          <>
+            {stats.length > 1 && (
+              <p>- {records.length / stats.length} questions each</p>
+            )}
+            {noWinner && <p>- No winners</p>}
+          </>
         )}
-        {noWinner && <p>- No winners</p>}
       </div>
       <Space wrap size="large">
         {stats.map((stat) => {
@@ -120,7 +126,7 @@ const Final = () => {
             </Card>
           );
 
-          if (isWinner && winners[0] === stat.playerId) {
+          if (playerCount > 1 && isWinner && winners[0] === stat.playerId) {
             return (
               <Badge.Ribbon key={stat.playerId} text="Winner" color="green">
                 <div className="bg-light">{PlayerStat}</div>
@@ -136,7 +142,15 @@ const Final = () => {
           size="large"
           icon={<ReloadOutlined />}
           type="primary"
-          onClick={() => setRecord([])}
+          onClick={() => {
+            setRecord([]);
+            setConfig((current) => ({
+              ...current,
+              gameCount: current.gameCount + 1,
+              Questions: Questions(playerCount),
+            }));
+            goToSlide(slides.GAME_START);
+          }}
         >
           Restart
         </Button>

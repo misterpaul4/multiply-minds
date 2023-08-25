@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Alert, Button, Typography } from "antd";
+import { Alert, Button, Form, Typography } from "antd";
 import Question from "./common/Question";
 import { useContext, useEffect, useRef, useState } from "react";
 import {
@@ -38,6 +38,9 @@ export const Game = ({ gameNumber, answer, question }: IProps) => {
   );
   const countdownRef = useRef<Countdown>(null);
   const [timeFinished, setTimeFinished] = useState(false);
+  const [inputDisable, setInputDisable] = useState(false);
+
+  const [form] = Form.useForm();
 
   const stopCT = () => countdownRef.current?.pause();
 
@@ -47,7 +50,7 @@ export const Game = ({ gameNumber, answer, question }: IProps) => {
     stopCT();
     value = +value;
     setIsCorrect(value === answer);
-
+    setInputDisable(true);
     setCanMove(true);
     setRecord((current) => [
       ...current,
@@ -68,6 +71,15 @@ export const Game = ({ gameNumber, answer, question }: IProps) => {
     }
   }, [currentSlide, gameNumber]);
 
+  const resetValues = () => {
+    setIsCorrect(undefined);
+    setCanMove(false);
+    countdownRef.current?.stop();
+    setTimeFinished(false);
+    setInputDisable(false);
+    form.resetFields();
+  };
+
   return (
     <div className="w-50">
       <Countdown
@@ -83,10 +95,12 @@ export const Game = ({ gameNumber, answer, question }: IProps) => {
 
       <Typography.Title level={1}>{currentPlayer}</Typography.Title>
       <Question
+        form={form}
         question={question}
         answer={answer}
         onAnswer={onAnswer}
         timeFinished={timeFinished}
+        disabled={inputDisable}
       />
       {canMove && (
         <Alert
@@ -136,6 +150,7 @@ export const Game = ({ gameNumber, answer, question }: IProps) => {
               ]);
             }
             nextSlide();
+            resetValues();
           }
         }}
         className="mt-4"

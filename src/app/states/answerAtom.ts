@@ -1,10 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { atom, selector } from "recoil";
 import { IGameConfig } from "../../utils/types";
 
 const answerState = atom({
   key: "answerState",
-  default: {} as IGameConfig,
+  default: {
+    gameCount: 0,
+    Questions: [],
+    playerCount: 0,
+    playerDetails: [],
+  } as IGameConfig,
 });
 
 export const playerCountState = selector({

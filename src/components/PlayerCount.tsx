@@ -5,6 +5,7 @@ import answerState from "../app/states/answerAtom";
 import { useContext } from "react";
 import AnswerContext from "../app/states/answersContext";
 import { config, slides } from "../utils/constants";
+import Questions from "./Game";
 
 const PlayerCount = () => {
   const values: IAnswer[] = [
@@ -25,6 +26,7 @@ const PlayerCount = () => {
         setGameConfig((current) => ({
           ...current,
           playerCount: answer as number,
+          Questions: Questions(answer),
         }));
         slides.RESULT =
           slides.PLAYER_DETAILS + 1 + answer * config.NUM_OF_QUESTIONS;
