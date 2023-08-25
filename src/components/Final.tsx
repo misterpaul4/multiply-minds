@@ -78,8 +78,9 @@ const Final = () => {
         <PlayerTimeLine result={viewTimeLine?.result ?? []} />
       </Modal>
 
-      <Typography.Title>Report</Typography.Title>
+      <Typography.Title className="m-0">Report</Typography.Title>
       <div className="font-italic report-card">
+        <p>- Each correct answer has 5pts</p>
         <p>- {records.length} total questions</p>
         {playerCount > 1 && (
           <>
@@ -111,6 +112,7 @@ const Final = () => {
               }
             >
               <Progress type="circle" percent={stat.percentageCorrect} />
+              <Typography.Title level={5}>{stat.points}pts</Typography.Title>
               <Descriptions bordered layout="vertical" className="mt-5">
                 <Descriptions.Item
                   labelStyle={{ fontWeight: "bold" }}
@@ -141,7 +143,7 @@ const Final = () => {
           return PlayerStat;
         })}
       </Space>
-      <div className="mt-5">
+      <div className="mt-2">
         <Button
           size="large"
           icon={<ReloadOutlined />}

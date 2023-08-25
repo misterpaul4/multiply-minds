@@ -1,3 +1,4 @@
+import { config } from "./constants";
 import { $operators, IQuestionAnswer, PlayerStats } from "./types";
 
 export function generateRandomNumberInRange(min: number, max: number): number {
@@ -67,17 +68,19 @@ export function calculatePercentageCorrect(
       totalAnswers: 0,
       percentageCorrect: 0,
       playerName: question.name,
+      points: 0,
     };
 
     if (question.value !== undefined && question.answer === question.value) {
       playerStat.correctAnswers++;
+      playerStat.points += config.POINTS_PER_GAME;
     }
 
     playerStat.totalAnswers++;
     playerStatsMap.set(question.playerId, playerStat);
   });
 
-  // Calculate the percentage of correct answers for each player
+  // Calculate the percentage & points of correct answers for each player
   const playerStats: PlayerStats[] = Array.from(playerStatsMap.values()).map(
     (playerStat) => {
       playerStat.percentageCorrect = Math.round(
@@ -94,15 +97,19 @@ export function getWinnerPlayerIds(playerStats: PlayerStats[]): number[] {
   const winnerPlayerIds: number[] = [];
   let highestPercentage = 0;
 
-  playerStats.forEach(playerStat => {
-      if (playerStat.percentageCorrect > highestPercentage) {
-          highestPercentage = playerStat.percentageCorrect;
-          winnerPlayerIds.length = 0; // Clear previous winners
-          winnerPlayerIds.push(playerStat.playerId);
-      } else if (playerStat.percentageCorrect === highestPercentage && highestPercentage !== 0) {
-          winnerPlayerIds.push(playerStat.playerId);
-      }
+  playerStats.forEach((playerStat) => {
+    if (playerStat.percentageCorrect > highestPercentage) {
+      highestPercentage = playerStat.percentageCorrect;
+      winnerPlayerIds.length = 0; // Clear previous winners
+      winnerPlayerIds.push(playerStat.playerId);
+    } else if (
+      playerStat.percentageCorrect === highestPercentage &&
+      highestPercentage !== 0
+    ) {
+      winnerPlayerIds.push(playerStat.playerId);
+    }
   });
 
   return winnerPlayerIds;
 }
+

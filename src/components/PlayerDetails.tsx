@@ -33,7 +33,6 @@ const PlayerDetails = () => {
       </Button>
       <Form
         layout="vertical"
-        className="w-25"
         onFinish={(values) =>
           onSave(Object.values(values as string).map((v) => v))
         }

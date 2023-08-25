@@ -35,6 +35,7 @@ export interface PlayerStats {
   totalAnswers: number;
   percentageCorrect: number;
   playerName: string;
+  points: number;
 }
 
 export interface IPlayerTimeLine {
