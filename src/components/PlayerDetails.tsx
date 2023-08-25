@@ -5,6 +5,7 @@ import { LeftOutlined, SendOutlined } from "@ant-design/icons";
 import { useContext } from "react";
 import AnswerContext from "../app/states/answersContext";
 import { IPlayerDetail } from "../utils/types";
+import { toTitleCase } from "../utils/string";
 
 const PlayerDetails = () => {
   const playCount = useRecoilValue(playerCountState);
@@ -18,7 +19,7 @@ const PlayerDetails = () => {
   const onSave = (names: string[]) => {
     const answer: IPlayerDetail[] = names.map((name, index) => ({
       id: index,
-      name,
+      name: toTitleCase(name),
     }));
 
     setGameConfig((current) => ({ ...current, playerDetails: answer }));
