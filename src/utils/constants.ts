@@ -1,3 +1,6 @@
+import { getLs } from "./localStoage";
+import { IGameConfig } from "./types";
+
 export const slides = {
   PLAYER_COUNT: 0,
   PLAYER_DETAILS: 1,
@@ -5,9 +8,11 @@ export const slides = {
   RESULT: -1,
 };
 
-export const config = {
-  NUM_OF_QUESTIONS: 3,
-};
+const NUM_OF_QUESTIONS_LS_KEY: keyof IGameConfig = "numOfQuestions";
+const DURATION_LS_KEY: keyof IGameConfig = "durationInSeconds";
 
-export const gameDurationInSeconds = 10 * 1000; // 10 seconds
+export const config = {
+  NUM_OF_QUESTIONS: getLs(NUM_OF_QUESTIONS_LS_KEY) ?? 5,
+  DURATION: getLs(DURATION_LS_KEY) ?? 10,
+};
 

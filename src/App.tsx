@@ -3,16 +3,16 @@ import PlayerCount from "./components/PlayerCount";
 import { useEffect, useRef, useState } from "react";
 import { CarouselRef } from "antd/es/carousel";
 import AnswerContext from "./app/states/answersContext";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import PlayerDetails from "./components/PlayerDetails";
-import configState from "./app/states/configAtom";
-import { config, slides } from "./utils/constants";
+import configState, { numOfQuestions } from "./app/states/configAtom";
+import { slides } from "./utils/constants";
 import Final from "./components/Final";
 import { LoadingOutlined } from "@ant-design/icons";
 
 function App() {
   const [gameConfig] = useRecoilState(configState);
-
+  const NUM_OF_QUESTIONS = useRecoilValue(numOfQuestions);
   const [loading, setLoading] = useState(false);
   const [slide, setSlide] = useState(0);
 
@@ -35,7 +35,7 @@ function App() {
   const sliderRef = useRef<CarouselRef>(null);
 
   const totalPlayers = gameConfig.playerCount ?? 0;
-  const totalGames = (totalPlayers ?? 1) * config.NUM_OF_QUESTIONS;
+  const totalGames = (totalPlayers ?? 1) * NUM_OF_QUESTIONS;
 
   const gameRunning = slide > slides.PLAYER_DETAILS && slide < totalGames + 3;
 

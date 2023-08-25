@@ -8,9 +8,13 @@ import {
   getQuestionAndAnswer,
   getRandomOperator,
 } from "../utils/number";
-import { config, gameDurationInSeconds, slides } from "../utils/constants";
+import { slides } from "../utils/constants";
 import AnswerContext from "../app/states/answersContext";
-import { playerCountState, players } from "../app/states/configAtom";
+import {
+  durationInSeconds,
+  playerCountState,
+  players,
+} from "../app/states/configAtom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import recordState from "../app/states/recordAtom";
 import Countdown from "react-countdown";
@@ -24,10 +28,11 @@ interface IProps {
   isLastGame?: boolean;
 }
 
-export const Game = ({ gameNumber, answer, question, isLastGame }: IProps) => {
+export const Game = ({ gameNumber, answer, question }: IProps) => {
   const { nextSlide, currentSlide } = useContext(AnswerContext);
   const playerCount = useRecoilValue(playerCountState);
   const playerDetails = useRecoilValue(players) ?? [];
+  const gameDurationInSeconds = useRecoilValue(durationInSeconds);
   const setRecord = useSetRecoilState(recordState);
 
   const [canMove, setCanMove] = useState(false);
@@ -69,10 +74,10 @@ export const Game = ({ gameNumber, answer, question, isLastGame }: IProps) => {
 
   useEffect(() => {
     if (currentSlide === gameNumber + slides.PLAYER_DETAILS) {
-      setCountdownTimer(Date.now() + gameDurationInSeconds);
+      setCountdownTimer(Date.now() + gameDurationInSeconds * 1000);
       startCT();
     }
-  }, [currentSlide, gameNumber]);
+  }, [currentSlide, gameNumber, gameDurationInSeconds]);
 
   const resetValues = () => {
     setIsCorrect(undefined);
@@ -171,10 +176,10 @@ export const Game = ({ gameNumber, answer, question, isLastGame }: IProps) => {
   );
 };
 
-const Questions = (total: number) => {
+const Questions = (total: number, numOfQuestions: number) => {
   const components: React.ReactElement[] = [];
 
-  total = total * config.NUM_OF_QUESTIONS;
+  total = total * numOfQuestions;
 
   for (let index = 1; index < total + 1; index++) {
     const operator = getRandomOperator();

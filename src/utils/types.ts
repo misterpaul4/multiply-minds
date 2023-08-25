@@ -25,6 +25,8 @@ export interface IGameConfig {
   playerCount: number;
   gameCount: number;
   Questions: React.ReactElement[];
+  numOfQuestions: number;
+  durationInSeconds: number;
 }
 
 export interface PlayerStats {

@@ -20,7 +20,10 @@ import {
 } from "../utils/number";
 import PlayerTimeLine from "./PlayerTimeLine";
 import { IPlayerTimeLine } from "../utils/types";
-import configState, { playerCountState } from "../app/states/configAtom";
+import configState, {
+  numOfQuestions,
+  playerCountState,
+} from "../app/states/configAtom";
 import Questions from "./Game";
 
 const Final = () => {
@@ -30,6 +33,7 @@ const Final = () => {
   const { currentSlide, goToSlide } = useContext(AnswerContext);
   const inLastSlide = currentSlide === slides.RESULT;
   const playerCount = useRecoilValue(playerCountState);
+  const NUM_OF_QUESTIONS = useRecoilValue(numOfQuestions);
 
   const stats = useMemo(() => {
     if (inLastSlide) {
@@ -147,7 +151,7 @@ const Final = () => {
             setConfig((current) => ({
               ...current,
               gameCount: current.gameCount + 1,
-              Questions: Questions(playerCount),
+              Questions: Questions(playerCount, NUM_OF_QUESTIONS),
             }));
             goToSlide(slides.GAME_START);
           }}
