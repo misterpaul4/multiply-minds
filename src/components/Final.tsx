@@ -20,12 +20,12 @@ import {
 } from "../utils/number";
 import PlayerTimeLine from "./PlayerTimeLine";
 import { IPlayerTimeLine } from "../utils/types";
-import answerState, { playerCountState } from "../app/states/answerAtom";
+import configState, { playerCountState } from "../app/states/configAtom";
 import Questions from "./Game";
 
 const Final = () => {
   const setRecord = useSetRecoilState(recordState);
-  const setConfig = useSetRecoilState(answerState);
+  const setConfig = useSetRecoilState(configState);
   const records = useRecoilValue(getRecords);
   const { currentSlide, goToSlide } = useContext(AnswerContext);
   const inLastSlide = currentSlide === slides.RESULT;

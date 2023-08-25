@@ -1,5 +1,5 @@
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import answerState, { playerCountState } from "../app/states/answerAtom";
+import configState, { playerCountState } from "../app/states/configAtom";
 import { Button, Form, Input, Popconfirm, Space, Typography } from "antd";
 import { LeftOutlined, SendOutlined } from "@ant-design/icons";
 import { useContext } from "react";
@@ -9,21 +9,21 @@ import { toTitleCase } from "../utils/string";
 
 const PlayerDetails = () => {
   const playCount = useRecoilValue(playerCountState);
-  const setGameConfig = useSetRecoilState(answerState);
+  const setGameConfig = useSetRecoilState(configState);
   const { nextSlide, prevSlide } = useContext(AnswerContext);
 
   if (!playCount) {
     return null;
   }
 
-  const onSave = (names: string[]) => {
+  const onSave = (names: string[], delay = false) => {
     const answer: IPlayerDetail[] = names.map((name, index) => ({
       id: index,
       name: toTitleCase(name),
     }));
 
     setGameConfig((current) => ({ ...current, playerDetails: answer }));
-    nextSlide();
+    nextSlide(delay);
   };
 
   return (
@@ -80,7 +80,7 @@ const PlayerDetails = () => {
                 playerNames.push(`Player ${index + 1}`);
               }
 
-              onSave(playerNames);
+              onSave(playerNames, true);
             }}
           >
             <Button size="large">Skip</Button>

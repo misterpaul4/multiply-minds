@@ -1,7 +1,7 @@
 import Question from "./common/Question";
 import { IAnswer } from "../utils/types";
 import { useSetRecoilState } from "recoil";
-import answerState from "../app/states/answerAtom";
+import configState from "../app/states/configAtom";
 import { useContext } from "react";
 import AnswerContext from "../app/states/answersContext";
 import { config, slides } from "../utils/constants";
@@ -15,7 +15,7 @@ const PlayerCount = () => {
     { title: "4 Players", value: 4 },
   ];
 
-  const setGameConfig = useSetRecoilState(answerState);
+  const setGameConfig = useSetRecoilState(configState);
   const nextSlide = useContext(AnswerContext).nextSlide;
 
   return (

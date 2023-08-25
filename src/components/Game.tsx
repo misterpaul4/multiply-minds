@@ -10,7 +10,7 @@ import {
 } from "../utils/number";
 import { config, gameDurationInSeconds, slides } from "../utils/constants";
 import AnswerContext from "../app/states/answersContext";
-import { playerCountState, players } from "../app/states/answerAtom";
+import { playerCountState, players } from "../app/states/configAtom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import recordState from "../app/states/recordAtom";
 import Countdown from "react-countdown";
@@ -21,9 +21,10 @@ interface IProps {
   gameNumber: number;
   question: string;
   answer: number;
+  isLastGame?: boolean;
 }
 
-export const Game = ({ gameNumber, answer, question }: IProps) => {
+export const Game = ({ gameNumber, answer, question, isLastGame }: IProps) => {
   const { nextSlide, currentSlide } = useContext(AnswerContext);
   const playerCount = useRecoilValue(playerCountState);
   const playerDetails = useRecoilValue(players) ?? [];
@@ -173,7 +174,9 @@ export const Game = ({ gameNumber, answer, question }: IProps) => {
 const Questions = (total: number) => {
   const components: React.ReactElement[] = [];
 
-  for (let index = 1; index < total * config.NUM_OF_QUESTIONS + 1; index++) {
+  total = total * config.NUM_OF_QUESTIONS;
+
+  for (let index = 1; index < total + 1; index++) {
     const operator = getRandomOperator();
     const [question, answer] = getQuestionAndAnswer({ operator });
     components.push(
@@ -182,6 +185,7 @@ const Questions = (total: number) => {
         question={question}
         key={index}
         gameNumber={index}
+        isLastGame={total === index}
       />
     );
   }

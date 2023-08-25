@@ -5,13 +5,13 @@ import { CarouselRef } from "antd/es/carousel";
 import AnswerContext from "./app/states/answersContext";
 import { useRecoilState } from "recoil";
 import PlayerDetails from "./components/PlayerDetails";
-import answerState from "./app/states/answerAtom";
+import configState from "./app/states/configAtom";
 import { config, slides } from "./utils/constants";
 import Final from "./components/Final";
 import { LoadingOutlined } from "@ant-design/icons";
 
 function App() {
-  const [gameConfig] = useRecoilState(answerState);
+  const [gameConfig] = useRecoilState(configState);
 
   const [loading, setLoading] = useState(false);
   const [slide, setSlide] = useState(0);

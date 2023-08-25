@@ -1,8 +1,8 @@
 import { atom, selector } from "recoil";
 import { IGameConfig } from "../../utils/types";
 
-const answerState = atom({
-  key: "answerState",
+const configState = atom({
+  key: "configState",
   default: {
     gameCount: 0,
     Questions: [],
@@ -13,13 +13,13 @@ const answerState = atom({
 
 export const playerCountState = selector({
   key: "playerCount",
-  get: ({ get }) => get(answerState).playerCount,
+  get: ({ get }) => get(configState).playerCount,
 });
 
 export const players = selector({
   key: "players",
-  get: ({ get }) => get(answerState).playerDetails,
+  get: ({ get }) => get(configState).playerDetails,
 });
 
-export default answerState;
+export default configState;
 
