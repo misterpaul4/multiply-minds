@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Alert, Button, Form, Typography } from "antd";
+import { Alert, Button, Form, Space, Typography } from "antd";
 import Question from "./common/Question";
 import { useContext, useEffect, useRef, useState } from "react";
 import {
@@ -14,6 +14,8 @@ import { playerCountState, players } from "../app/states/answerAtom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import recordState from "../app/states/recordAtom";
 import Countdown from "react-countdown";
+import Icon from "@ant-design/icons";
+import Clock from "../app/icons/Clock";
 
 interface IProps {
   gameNumber: number;
@@ -74,7 +76,6 @@ export const Game = ({ gameNumber, answer, question }: IProps) => {
   const resetValues = () => {
     setIsCorrect(undefined);
     setCanMove(false);
-    countdownRef.current?.stop();
     setTimeFinished(false);
     setInputDisable(false);
     form.resetFields();
@@ -82,16 +83,23 @@ export const Game = ({ gameNumber, answer, question }: IProps) => {
 
   return (
     <div className="w-50">
-      <Countdown
-        className="text-danger fs-2"
-        ref={countdownRef}
-        autoStart={false}
-        daysInHours
-        date={countdownTimer}
-        onComplete={() => {
-          setTimeFinished(true);
-        }}
-      />
+      <Space align="center" className="countdown-container">
+        <Icon
+          style={{ fontSize: "2rem" }}
+          component={Clock}
+          className={timeFinished ? "shake" : undefined}
+        />
+        <Countdown
+          className="text-danger fs-2"
+          ref={countdownRef}
+          autoStart={false}
+          daysInHours
+          date={countdownTimer}
+          onComplete={() => {
+            setTimeFinished(true);
+          }}
+        />
+      </Space>
 
       <Typography.Title level={1}>{currentPlayer}</Typography.Title>
       <Question

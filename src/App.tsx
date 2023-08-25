@@ -46,7 +46,7 @@ function App() {
         setSlide((current) => current + 1);
         sliderRef.current?.next();
         setLoading(false);
-      }, 800);
+      }, 1000);
     } else {
       setSlide((current) => current + 1);
       sliderRef.current?.next();
@@ -98,7 +98,7 @@ function App() {
             <Carousel
               ref={sliderRef}
               dots={false}
-              effect={slide > 1 ? "scrollx" : "fade"}
+              effect={slide > slides.PLAYER_DETAILS ? "scrollx" : "fade"}
             >
               <PlayerCount />
               <PlayerDetails />
