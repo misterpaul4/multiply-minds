@@ -1,4 +1,4 @@
-import { Carousel, Progress } from "antd";
+import { Carousel, Progress, Spin } from "antd";
 import PlayerCount from "./components/PlayerCount";
 import { useEffect, useRef, useState } from "react";
 import { CarouselRef } from "antd/es/carousel";
@@ -8,10 +8,12 @@ import PlayerDetails from "./components/PlayerDetails";
 import answerState from "./app/states/answerAtom";
 import { config, slides } from "./utils/constants";
 import Final from "./components/Final";
+import { LoadingOutlined } from "@ant-design/icons";
 
 function App() {
   const [gameConfig] = useRecoilState(answerState);
 
+  const [loading, setLoading] = useState(false);
   const [slide, setSlide] = useState(0);
 
   const ref = useRef<HTMLDivElement>(null);
@@ -39,9 +41,11 @@ function App() {
 
   const nextSlide = (delay = false) => {
     if (delay) {
+      setLoading(true);
       setTimeout(() => {
         setSlide((current) => current + 1);
         sliderRef.current?.next();
+        setLoading(false);
       }, 800);
     } else {
       setSlide((current) => current + 1);
@@ -82,26 +86,27 @@ function App() {
             />
           </>
         )}
-
-        <AnswerContext.Provider
-          value={{
-            goToSlide,
-            nextSlide,
-            prevSlide,
-            currentSlide: slide,
-          }}
-        >
-          <Carousel
-            ref={sliderRef}
-            dots={false}
-            effect={slide > 1 ? "scrollx" : "fade"}
+        <Spin indicator={<LoadingOutlined />} spinning={loading}>
+          <AnswerContext.Provider
+            value={{
+              goToSlide,
+              nextSlide,
+              prevSlide,
+              currentSlide: slide,
+            }}
           >
-            <PlayerCount />
-            <PlayerDetails />
-            {gameConfig.Questions}
-            <Final />
-          </Carousel>
-        </AnswerContext.Provider>
+            <Carousel
+              ref={sliderRef}
+              dots={false}
+              effect={slide > 1 ? "scrollx" : "fade"}
+            >
+              <PlayerCount />
+              <PlayerDetails />
+              {gameConfig.Questions}
+              <Final />
+            </Carousel>
+          </AnswerContext.Provider>
+        </Spin>
       </div>
     </div>
   );
