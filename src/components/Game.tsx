@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Alert, Button, Form, Space, Typography } from "antd";
+import { Alert, AlertProps, Button, Form, Space, Typography } from "antd";
 import Question from "./common/Question";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   formatNumber,
   getPlayerForGame,
@@ -17,9 +17,9 @@ import {
 } from "../app/states/configAtom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import recordState from "../app/states/recordAtom";
-import Countdown from "react-countdown";
 import Icon from "@ant-design/icons";
 import Clock from "../app/icons/Clock";
+import useCountdown from "../app/hooks/useCountdownTimer";
 
 interface IProps {
   gameNumber: number;
@@ -27,6 +27,42 @@ interface IProps {
   answer: number;
   isLastGame?: boolean;
 }
+
+const AlertComp: (arg: {
+  canMove: boolean;
+  timeFinished: boolean;
+  isCorrect?: boolean;
+  answer?: number;
+}) => React.ReactElement | null = ({
+  canMove,
+  timeFinished,
+  isCorrect,
+  answer,
+}) => {
+  const props: AlertProps = {};
+  if (isCorrect) {
+    props.type = "success";
+    props.message = "Correct";
+  } else if (canMove && !isCorrect) {
+    props.type = "error";
+    props.message = (
+      <span>
+        Wrong!. correct answer is <strong>{formatNumber(answer!)}</strong>
+      </span>
+    );
+  } else if (timeFinished) {
+    props.type = "warning";
+    props.message = (
+      <span>
+        You ran out of time!. Answer is <strong>{formatNumber(answer!)}</strong>
+      </span>
+    );
+  } else {
+    return null;
+  }
+
+  return <Alert {...props} className="mt-3" showIcon />;
+};
 
 export const Game = ({ gameNumber, answer, question }: IProps) => {
   const { nextSlide, currentSlide } = useContext(AnswerContext);
@@ -41,21 +77,17 @@ export const Game = ({ gameNumber, answer, question }: IProps) => {
   const playerIndex = getPlayerForGame(gameNumber, playerCount);
   const currentPlayer = playerDetails?.[playerIndex]?.name;
 
-  const [countdownTimer, setCountdownTimer] = useState<number>(
-    Date.now() * 600000 // initialize countdown with 1hour
-  );
-  const countdownRef = useRef<Countdown>(null);
   const [timeFinished, setTimeFinished] = useState(false);
   const [inputDisable, setInputDisable] = useState(false);
 
   const [form] = Form.useForm();
 
-  const stopCT = () => countdownRef.current?.pause();
-
-  const startCT = () => countdownRef.current?.start();
+  const { countdown, pause, start } = useCountdown(gameDurationInSeconds, () =>
+    setTimeFinished(true)
+  );
 
   const onAnswer = (value: number) => {
-    stopCT();
+    pause();
     value = +value;
     setIsCorrect(value === answer);
     setInputDisable(true);
@@ -74,9 +106,9 @@ export const Game = ({ gameNumber, answer, question }: IProps) => {
 
   useEffect(() => {
     if (currentSlide === gameNumber + slides.PLAYER_DETAILS) {
-      setCountdownTimer(Date.now() + gameDurationInSeconds * 1000);
-      startCT();
+      start();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentSlide, gameNumber, gameDurationInSeconds]);
 
   const resetValues = () => {
@@ -95,16 +127,7 @@ export const Game = ({ gameNumber, answer, question }: IProps) => {
           component={Clock}
           className={timeFinished ? "shake" : undefined}
         />
-        <Countdown
-          className="text-danger fs-2"
-          ref={countdownRef}
-          autoStart={false}
-          daysInHours
-          date={countdownTimer}
-          onComplete={() => {
-            setTimeFinished(true);
-          }}
-        />
+        <span className="text-danger fs-2">{countdown}</span>
       </Space>
 
       <Typography.Title level={1}>{currentPlayer}</Typography.Title>
@@ -116,37 +139,12 @@ export const Game = ({ gameNumber, answer, question }: IProps) => {
         timeFinished={timeFinished}
         disabled={inputDisable}
       />
-      {canMove && (
-        <Alert
-          type={isCorrect ? "success" : "error"}
-          className="mt-3"
-          message={
-            isCorrect ? (
-              "Correct"
-            ) : (
-              <span>
-                Wrong!. correct answer is{" "}
-                <strong>{formatNumber(answer)}</strong>
-              </span>
-            )
-          }
-          showIcon
-        />
-      )}
-
-      {timeFinished && (
-        <Alert
-          type="warning"
-          showIcon
-          className="mt-3"
-          message={
-            <span>
-              You ran out of time!. Answer is{" "}
-              <strong>{formatNumber(answer)}</strong>
-            </span>
-          }
-        />
-      )}
+      <AlertComp
+        canMove={canMove}
+        timeFinished={timeFinished}
+        answer={answer}
+        isCorrect={isCorrect}
+      />
       <Button
         size="large"
         type="primary"
