@@ -137,6 +137,7 @@ export const Game = ({ gameNumber, answer, question }: IProps) => {
       {timeFinished && (
         <Alert
           type="warning"
+          showIcon
           className="mt-3"
           message={
             <span>
