@@ -30,7 +30,8 @@ const useCountdown = (
     return () => {
       clearInterval(timer);
     };
-  }, [isRunning, time, onFinish]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isRunning, time]);
 
   const start = () => {
     setTime(initialTimeInSeconds);

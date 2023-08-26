@@ -106,6 +106,7 @@ export const Game = ({ gameNumber, answer, question }: IProps) => {
 
   useEffect(() => {
     if (currentSlide === gameNumber + slides.PLAYER_DETAILS) {
+      setTimeFinished(false);
       start();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
