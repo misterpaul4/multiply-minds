@@ -5,15 +5,19 @@ import {
   Card,
   Descriptions,
   Modal,
+  Popconfirm,
   Progress,
   Space,
   Typography,
 } from "antd";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import recordState, { getRecords } from "../app/states/recordAtom";
+import recordState, {
+  defaultRecord,
+  getRecords,
+} from "../app/states/recordAtom";
 import { useContext, useMemo, useState } from "react";
 import AnswerContext from "../app/states/answersContext";
-import { slides } from "../utils/constants";
+import { config, slides } from "../utils/constants";
 import {
   calculatePercentageCorrect,
   getWinnerPlayerIds,
@@ -21,6 +25,7 @@ import {
 import PlayerTimeLine from "./PlayerTimeLine";
 import { IPlayerTimeLine } from "../utils/types";
 import configState, {
+  defaultConfig,
   numOfQuestions,
   playerCountState,
 } from "../app/states/configAtom";
@@ -59,6 +64,15 @@ const Final = () => {
     setViewTimeLine({
       playerName,
       result: records.filter((rec) => rec.playerId === id),
+    });
+  };
+
+  const reset = () => {
+    setRecord(defaultRecord);
+    setConfig({
+      ...defaultConfig,
+      numOfQuestions: config.NUM_OF_QUESTIONS(),
+      durationInSeconds: config.DURATION(),
     });
   };
 
@@ -144,23 +158,37 @@ const Final = () => {
           return PlayerStat;
         })}
       </Space>
-      <div className="mt-2">
-        <Button
-          size="large"
-          icon={<ReloadOutlined />}
-          type="primary"
-          onClick={() => {
-            setRecord([]);
-            setConfig((current) => ({
-              ...current,
-              gameCount: current.gameCount + 1,
-              Questions: Questions(playerCount, NUM_OF_QUESTIONS),
-            }));
-            goToSlide(slides.GAME_START);
-          }}
-        >
-          Restart
-        </Button>
+      <div className="mt-3">
+        <Space>
+          <Button
+            size="large"
+            icon={<ReloadOutlined />}
+            type="primary"
+            onClick={() => {
+              setRecord([]);
+              setConfig((current) => ({
+                ...current,
+                gameCount: current.gameCount + 1,
+                Questions: Questions(playerCount, NUM_OF_QUESTIONS),
+              }));
+              goToSlide(slides.GAME_START);
+            }}
+          >
+            Restart
+          </Button>
+          <Popconfirm
+            title="Are you sure?"
+            okText="Yes"
+            onConfirm={() => {
+              reset();
+              goToSlide(slides.PLAYER_COUNT);
+            }}
+          >
+            <Button size="large" danger>
+              End
+            </Button>
+          </Popconfirm>
+        </Space>
       </div>
     </div>
   );

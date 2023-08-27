@@ -2,9 +2,11 @@
 import { atom, selector } from "recoil";
 import { IQuestionAnswer } from "../../utils/types";
 
+export const defaultRecord: IQuestionAnswer[] = [];
+
 const recordState = atom({
   key: "recordState",
-  default: [] as IQuestionAnswer[],
+  default: defaultRecord,
 });
 
 export const getRecords = selector({

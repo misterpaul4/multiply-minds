@@ -58,9 +58,18 @@ function App() {
     sliderRef.current?.prev();
   };
 
-  const goToSlide = (val: number) => {
-    setSlide(val);
-    sliderRef.current?.goTo(val);
+  const goToSlide = (val: number, delay = false) => {
+    if (delay) {
+      setLoading(true);
+      setTimeout(() => {
+        setSlide(val);
+        sliderRef.current?.goTo(val);
+        setLoading(false);
+      }, 1000);
+    } else {
+      setSlide(val);
+      sliderRef.current?.goTo(val);
+    }
   };
 
   const getpercent = () => {

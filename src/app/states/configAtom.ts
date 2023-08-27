@@ -2,16 +2,18 @@ import { atom, selector } from "recoil";
 import { IGameConfig } from "../../utils/types";
 import { config } from "../../utils/constants";
 
+export const defaultConfig: IGameConfig = {
+  gameCount: 0,
+  Questions: [],
+  playerCount: 0,
+  playerDetails: [],
+  numOfQuestions: config.NUM_OF_QUESTIONS(),
+  durationInSeconds: config.DURATION(),
+};
+
 const configState = atom({
   key: "configState",
-  default: {
-    gameCount: 0,
-    Questions: [],
-    playerCount: 0,
-    playerDetails: [],
-    numOfQuestions: config.NUM_OF_QUESTIONS,
-    durationInSeconds: config.DURATION,
-  } as IGameConfig,
+  default: defaultConfig,
 });
 
 export const playerCountState = selector({
