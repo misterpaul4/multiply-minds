@@ -136,7 +136,7 @@ const Final = () => {
           if (playerCount > 1 && isWinner && winners[0] === stat.playerId) {
             return (
               <Badge.Ribbon key={stat.playerId} text="Winner" color="green">
-                <div className="bg-light">{PlayerStat}</div>
+                <div>{PlayerStat}</div>
               </Badge.Ribbon>
             );
           }
