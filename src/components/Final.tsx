@@ -59,7 +59,6 @@ const Final = () => {
     return [];
   }, [stats]);
 
-  const noWinner = winners.length < 1;
   const isWinner = winners.length === 1;
 
   const [viewTimeLine, setViewTimeLine] = useState<IPlayerTimeLine>();
@@ -99,18 +98,6 @@ const Final = () => {
       </Modal>
 
       <Typography.Title className="m-0">Report</Typography.Title>
-      <div className="font-italic report-card">
-        <p>- Each correct answer has 5pts</p>
-        <p>- {records.length} total questions</p>
-        {playerCount > 1 && (
-          <>
-            {stats.length > 1 && (
-              <p>- {records.length / stats.length} questions each</p>
-            )}
-            {noWinner && <p>- No winners</p>}
-          </>
-        )}
-      </div>
       <Space wrap size="large">
         {stats.map((stat) => {
           const PlayerStat = (
@@ -132,8 +119,15 @@ const Final = () => {
               }
             >
               <Progress type="circle" percent={stat.percentageCorrect} />
-              <Typography.Title level={5}>{stat.points}pts</Typography.Title>
-              <Descriptions bordered layout="vertical" className="mt-5">
+              <Typography.Title level={5}>
+                {stat.points}pts / {config.POINTS_PER_GAME * NUM_OF_QUESTIONS}
+              </Typography.Title>
+              <Descriptions
+                bordered
+                layout="vertical"
+                className="mt-3"
+                size="small"
+              >
                 <Descriptions.Item
                   labelStyle={{ fontWeight: "bold" }}
                   label="Correct Answers"

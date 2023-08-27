@@ -28,7 +28,7 @@ export const config: {
 } = {
   NUM_OF_QUESTIONS: () => getLs(NUM_OF_QUESTIONS_LS_KEY) ?? 5,
   DURATION: () => getLs(DURATION_LS_KEY) ?? 10,
-  DIFFICULTY: () => getLs(DIFFICULTY_KS_KEY) ?? "Moderate",
+  DIFFICULTY: () => getLs(DIFFICULTY_KS_KEY) ?? "Easy",
   OPERATOR: () => getLs(OPERATOR_LS_KEY) ?? operators,
   POINTS_PER_GAME: 5,
 };

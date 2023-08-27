@@ -17,15 +17,15 @@ interface IParams {
 
 const gameDifficultyConfig: Record<$gameDifficulty, [number, number]> = {
   "Very Easy": [1, 10],
-  Easy: [5, 20],
-  Moderate: [5, 50],
-  Hard: [20, 100],
+  Easy: [10, 20],
+  Moderate: [20, 50],
+  Hard: [30, 100],
   "Very Hard": [100, 1000],
 };
 
 const gameDifficultyConfigMulti: Record<$gameDifficulty, [number, number]> = {
-  "Very Easy": [2, 10],
-  Easy: [2, 12],
+  "Very Easy": [2, 5],
+  Easy: [2, 10],
   Moderate: [3, 30],
   Hard: [5, 50],
   "Very Hard": [10, 100],
@@ -35,14 +35,20 @@ export const getQuestionAndAnswer: (arg: IParams) => [string, number] = ({
   operator,
   difficulty,
 }) => {
-  const num1 =
-    operator === "multiply (x)"
-      ? generateRandomNumberInRange(...gameDifficultyConfigMulti[difficulty])
-      : generateRandomNumberInRange(...gameDifficultyConfigMulti[difficulty]);
-  const num2 =
-    operator === "multiply (x)"
-      ? generateRandomNumberInRange(...gameDifficultyConfig[difficulty])
-      : generateRandomNumberInRange(...gameDifficultyConfig[difficulty]);
+  let num1: number;
+  let num2: number;
+
+  if (operator === "multiply (x)") {
+    num1 = generateRandomNumberInRange(
+      ...gameDifficultyConfigMulti[difficulty]
+    );
+    num2 = generateRandomNumberInRange(
+      ...gameDifficultyConfigMulti[difficulty]
+    );
+  } else {
+    num1 = generateRandomNumberInRange(...gameDifficultyConfig[difficulty]);
+    num2 = generateRandomNumberInRange(...gameDifficultyConfig[difficulty]);
+  }
 
   switch (operator) {
     case "add (+)":
