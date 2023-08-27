@@ -20,7 +20,7 @@ import recordState from "../app/states/recordAtom";
 import Icon from "@ant-design/icons";
 import Clock from "../app/icons/Clock";
 import useCountdown from "../app/hooks/useCountdownTimer";
-import { $gameDifficulty } from "../utils/types";
+import { $gameDifficulty, $operators } from "../utils/types";
 
 interface IProps {
   gameNumber: number;
@@ -180,15 +180,20 @@ export const Game = ({ gameNumber, answer, question }: IProps) => {
 const Questions = (
   total: number,
   numOfQuestions: number,
-  difficulty: $gameDifficulty
+  difficulty: $gameDifficulty,
+  operator: $operators[]
 ) => {
   const components: React.ReactElement[] = [];
 
   total = total * numOfQuestions;
 
+  const op = getRandomOperator(operator);
+
   for (let index = 1; index < total + 1; index++) {
-    const operator = getRandomOperator();
-    const [question, answer] = getQuestionAndAnswer({ operator, difficulty });
+    const [question, answer] = getQuestionAndAnswer({
+      operator: op,
+      difficulty,
+    });
     components.push(
       <Game
         answer={answer}

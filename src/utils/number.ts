@@ -36,19 +36,19 @@ export const getQuestionAndAnswer: (arg: IParams) => [string, number] = ({
   difficulty,
 }) => {
   const num1 =
-    operator === "multiply"
+    operator === "multiply (x)"
       ? generateRandomNumberInRange(...gameDifficultyConfigMulti[difficulty])
       : generateRandomNumberInRange(...gameDifficultyConfigMulti[difficulty]);
   const num2 =
-    operator === "multiply"
+    operator === "multiply (x)"
       ? generateRandomNumberInRange(...gameDifficultyConfig[difficulty])
       : generateRandomNumberInRange(...gameDifficultyConfig[difficulty]);
 
   switch (operator) {
-    case "add":
+    case "add (+)":
       return [`${num1} + ${num2}`, num1 + num2];
 
-    case "subtract":
+    case "subtract (-)":
       return [`${num1} - ${num2}`, num1 - num2];
 
     default:
@@ -56,11 +56,9 @@ export const getQuestionAndAnswer: (arg: IParams) => [string, number] = ({
   }
 };
 
-const operators: $operators[] = ["add", "multiply", "subtract"];
-
-export const getRandomOperator = () => {
-  const randomIndex = Math.floor(Math.random() * operators.length);
-  return operators[randomIndex];
+export const getRandomOperator = (op: $operators[]) => {
+  const randomIndex = Math.floor(Math.random() * op.length);
+  return op[randomIndex];
 };
 
 export const formatNumber = (amount: number) => {

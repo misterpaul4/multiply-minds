@@ -5,7 +5,7 @@ export interface IAnswer {
   value: unknown;
 }
 
-export type $operators = "add" | "subtract" | "multiply";
+export type $operators = "add (+)" | "subtract (-)" | "multiply (x)";
 export interface IQuestionAnswer {
   question: string;
   answer: number;
@@ -34,6 +34,7 @@ export interface IGameConfig {
   numOfQuestions: number;
   durationInSeconds: number;
   difficulty: $gameDifficulty;
+  operator: $operators[];
 }
 
 export interface PlayerStats {
