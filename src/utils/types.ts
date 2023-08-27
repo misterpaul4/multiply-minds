@@ -6,7 +6,6 @@ export interface IAnswer {
 }
 
 export type $operators = "add" | "subtract" | "multiply";
-
 export interface IQuestionAnswer {
   question: string;
   answer: number;
@@ -20,6 +19,13 @@ export interface IPlayerDetail {
   name: string;
 }
 
+export type $gameDifficulty =
+  | "Very Easy"
+  | "Easy"
+  | "Moderate"
+  | "Hard"
+  | "Very Hard";
+
 export interface IGameConfig {
   playerDetails: IPlayerDetail[];
   playerCount: number;
@@ -27,6 +33,7 @@ export interface IGameConfig {
   Questions: React.ReactElement[];
   numOfQuestions: number;
   durationInSeconds: number;
+  difficulty: $gameDifficulty;
 }
 
 export interface PlayerStats {

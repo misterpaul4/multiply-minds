@@ -1,5 +1,10 @@
 import { config } from "./constants";
-import { $operators, IQuestionAnswer, PlayerStats } from "./types";
+import {
+  $gameDifficulty,
+  $operators,
+  IQuestionAnswer,
+  PlayerStats,
+} from "./types";
 
 export function generateRandomNumberInRange(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -7,19 +12,37 @@ export function generateRandomNumberInRange(min: number, max: number): number {
 
 interface IParams {
   operator: $operators;
+  difficulty: $gameDifficulty;
 }
+
+const gameDifficultyConfig: Record<$gameDifficulty, [number, number]> = {
+  "Very Easy": [1, 10],
+  Easy: [5, 20],
+  Moderate: [5, 50],
+  Hard: [20, 100],
+  "Very Hard": [100, 1000],
+};
+
+const gameDifficultyConfigMulti: Record<$gameDifficulty, [number, number]> = {
+  "Very Easy": [2, 10],
+  Easy: [2, 12],
+  Moderate: [3, 30],
+  Hard: [5, 50],
+  "Very Hard": [10, 100],
+};
 
 export const getQuestionAndAnswer: (arg: IParams) => [string, number] = ({
   operator,
+  difficulty,
 }) => {
-  let num1 = generateRandomNumberInRange(2, 100);
-  let num2 = generateRandomNumberInRange(2, 100);
-
-  if (operator === "multiply" && num1 < num2) {
-    const temp = num1;
-    num1 = num2;
-    num2 = temp;
-  }
+  const num1 =
+    operator === "multiply"
+      ? generateRandomNumberInRange(...gameDifficultyConfigMulti[difficulty])
+      : generateRandomNumberInRange(...gameDifficultyConfigMulti[difficulty]);
+  const num2 =
+    operator === "multiply"
+      ? generateRandomNumberInRange(...gameDifficultyConfig[difficulty])
+      : generateRandomNumberInRange(...gameDifficultyConfig[difficulty]);
 
   switch (operator) {
     case "add":

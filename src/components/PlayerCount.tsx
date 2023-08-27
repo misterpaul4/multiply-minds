@@ -1,7 +1,10 @@
 import Question from "./common/Question";
 import { IAnswer } from "../utils/types";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import configState, { numOfQuestions } from "../app/states/configAtom";
+import configState, {
+  difficulty,
+  numOfQuestions,
+} from "../app/states/configAtom";
 import { useContext } from "react";
 import AnswerContext from "../app/states/answersContext";
 import { slides } from "../utils/constants";
@@ -19,6 +22,7 @@ const PlayerCount = () => {
   const setGameConfig = useSetRecoilState(configState);
   const nextSlide = useContext(AnswerContext).nextSlide;
   const NUM_OF_QUESTIONS = useRecoilValue(numOfQuestions);
+  const gameDifficulty = useRecoilValue(difficulty);
 
   return (
     <>
@@ -30,7 +34,7 @@ const PlayerCount = () => {
           setGameConfig((current) => ({
             ...current,
             playerCount: answer as number,
-            Questions: Questions(answer, NUM_OF_QUESTIONS),
+            Questions: Questions(answer, NUM_OF_QUESTIONS, gameDifficulty),
           }));
           slides.RESULT = slides.PLAYER_DETAILS + 1 + answer * NUM_OF_QUESTIONS;
           nextSlide(true);

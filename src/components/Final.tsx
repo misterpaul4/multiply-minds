@@ -26,6 +26,7 @@ import PlayerTimeLine from "./PlayerTimeLine";
 import { IPlayerTimeLine } from "../utils/types";
 import configState, {
   defaultConfig,
+  difficulty,
   numOfQuestions,
   playerCountState,
 } from "../app/states/configAtom";
@@ -39,6 +40,7 @@ const Final = () => {
   const inLastSlide = currentSlide === slides.RESULT;
   const playerCount = useRecoilValue(playerCountState);
   const NUM_OF_QUESTIONS = useRecoilValue(numOfQuestions);
+  const gameDifficulty = useRecoilValue(difficulty);
 
   const stats = useMemo(() => {
     if (inLastSlide) {
@@ -73,6 +75,7 @@ const Final = () => {
       ...defaultConfig,
       numOfQuestions: config.NUM_OF_QUESTIONS(),
       durationInSeconds: config.DURATION(),
+      difficulty: config.DIFFICULTY(),
     });
   };
 
@@ -169,7 +172,11 @@ const Final = () => {
               setConfig((current) => ({
                 ...current,
                 gameCount: current.gameCount + 1,
-                Questions: Questions(playerCount, NUM_OF_QUESTIONS),
+                Questions: Questions(
+                  playerCount,
+                  NUM_OF_QUESTIONS,
+                  gameDifficulty
+                ),
               }));
               goToSlide(slides.GAME_START);
             }}

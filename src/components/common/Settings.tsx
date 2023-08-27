@@ -1,19 +1,22 @@
-import { Card, InputNumber, Space, Tooltip, Typography } from "antd";
+import { Card, InputNumber, Select, Space, Tooltip, Typography } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import configState, {
+  difficulty,
   durationInSeconds,
   numOfQuestions,
 } from "../../app/states/configAtom";
 import { IGameConfig } from "../../utils/types";
 import { setLS } from "../../utils/localStoage";
+import { gameDifficulties } from "../../utils/constants";
 
 const GameSettings = () => {
   const setConfig = useSetRecoilState(configState);
   const totalQuestions = useRecoilValue(numOfQuestions);
+  const gameDifficulty = useRecoilValue(difficulty);
   const duration = useRecoilValue(durationInSeconds);
 
-  const onValueChange = (value: number | null, field: keyof IGameConfig) => {
+  const onValueChange = (value: unknown, field: keyof IGameConfig) => {
     if (value) {
       setConfig((current) => ({ ...current, [field]: value }));
       setLS(field, value);
@@ -60,6 +63,17 @@ const GameSettings = () => {
             size="large"
             bordered={false}
             className="border-bottom ml-3"
+          />
+        </Typography.Text>
+
+        <Typography.Text className="mr-2">
+          Difficulty:
+          <Select
+            size="large"
+            value={gameDifficulty}
+            style={{ width: 120 }}
+            options={gameDifficulties.map((d) => ({ label: d, value: d }))}
+            onChange={(v) => onValueChange(v, "difficulty")}
           />
         </Typography.Text>
       </Space>

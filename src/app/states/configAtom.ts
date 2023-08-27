@@ -9,6 +9,7 @@ export const defaultConfig: IGameConfig = {
   playerDetails: [],
   numOfQuestions: config.NUM_OF_QUESTIONS(),
   durationInSeconds: config.DURATION(),
+  difficulty: config.DIFFICULTY(),
 };
 
 const configState = atom({
@@ -34,6 +35,11 @@ export const numOfQuestions = selector({
 export const durationInSeconds = selector({
   key: "durationInSeconds",
   get: ({ get }) => get(configState).durationInSeconds,
+});
+
+export const difficulty = selector({
+  key: "difficulty",
+  get: ({ get }) => get(configState).difficulty,
 });
 
 export default configState;
