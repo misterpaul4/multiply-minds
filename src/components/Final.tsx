@@ -77,6 +77,7 @@ const Final = () => {
       numOfQuestions: config.NUM_OF_QUESTIONS(),
       durationInSeconds: config.DURATION(),
       difficulty: config.DIFFICULTY(),
+      operator: config.OPERATOR(),
     });
   };
 
