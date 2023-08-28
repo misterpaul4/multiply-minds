@@ -5,6 +5,7 @@ import {
   FormInstance,
   FormProps,
   Input,
+  InputNumber,
   List,
   Space,
   Typography,
@@ -21,6 +22,7 @@ interface IProps {
   timeFinished?: boolean;
   disabled?: boolean;
   form?: FormInstance;
+  inputType?: "number" | "text";
 }
 
 const { Item } = List;
@@ -33,6 +35,7 @@ const Question = ({
   timeFinished,
   disabled,
   form,
+  inputType,
 }: IProps) => {
   const formProp: FormProps = form ? { form } : {};
   return (
@@ -58,7 +61,11 @@ const Question = ({
         >
           <Space className="w-100">
             <Form.Item name="answer" className="mr-1">
-              <Input required size="large" />
+              {inputType === "number" ? (
+                <InputNumber className="w-100" required size="large" />
+              ) : (
+                <Input required size="large" />
+              )}
             </Form.Item>
             <Button
               htmlType="submit"

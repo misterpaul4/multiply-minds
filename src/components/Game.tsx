@@ -140,6 +140,7 @@ export const Game = ({ gameNumber, answer, question }: IProps) => {
         onAnswer={onAnswer}
         timeFinished={timeFinished}
         disabled={inputDisable}
+        inputType="number"
       />
       <AlertComp
         canMove={canMove}
