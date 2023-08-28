@@ -17,18 +17,18 @@ interface IParams {
 
 const gameDifficultyConfig: Record<$gameDifficulty, [number, number]> = {
   "Very Easy": [1, 10],
-  Easy: [10, 20],
-  Moderate: [20, 50],
-  Hard: [30, 100],
+  Easy: [1, 50],
+  Moderate: [10, 100],
+  Hard: [50, 500],
   "Very Hard": [100, 1000],
 };
 
 const gameDifficultyConfigMulti: Record<$gameDifficulty, [number, number]> = {
   "Very Easy": [2, 5],
   Easy: [2, 10],
-  Moderate: [3, 30],
-  Hard: [5, 50],
-  "Very Hard": [10, 100],
+  Moderate: [5, 20],
+  Hard: [10, 30],
+  "Very Hard": [30, 70],
 };
 
 export const getQuestionAndAnswer: (arg: IParams) => [string, number] = ({
