@@ -3,7 +3,6 @@ import {
   Button,
   Form,
   FormInstance,
-  FormProps,
   Input,
   InputNumber,
   List,
@@ -37,7 +36,6 @@ const Question = ({
   form,
   inputType,
 }: IProps) => {
-  const formProp: FormProps = form ? { form } : {};
   return (
     <div>
       <Typography.Title level={4}>{question}</Typography.Title>
@@ -52,12 +50,12 @@ const Question = ({
         />
       ) : (
         <Form
+          form={form}
           onFinish={(values) => {
             onAnswer(values.answer);
           }}
           layout="inline"
           disabled={disabled || timeFinished}
-          {...formProp}
         >
           <Space className="w-100">
             <Form.Item name="answer" className="mr-1">
