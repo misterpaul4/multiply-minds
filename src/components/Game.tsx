@@ -187,9 +187,8 @@ const Questions = (
 
   total = total * numOfQuestions;
 
-  const op = getRandomOperator(operator);
-
   for (let index = 1; index < total + 1; index++) {
+    const op = getRandomOperator(operator);
     const [question, answer] = getQuestionAndAnswer({
       operator: op,
       difficulty,
