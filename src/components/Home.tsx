@@ -12,7 +12,7 @@ interface HomeProps {
 
 export default function Home({ best, challenge, onPlay, onAcceptChallenge }: HomeProps) {
   return (
-    <div className="w-full flex flex-col items-center text-center animate-slide-up">
+    <div className="w-full my-auto flex flex-col items-center text-center animate-slide-up">
       <div className="mt-6 mb-2 flex gap-2">
         {OPERATIONS.map((op, i) => {
           const c = OP_COLOR[op];

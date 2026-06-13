@@ -29,12 +29,11 @@ body {
   color: var(--color-ink);
   -webkit-tap-highlight-color: transparent;
   -webkit-font-smoothing: antialiased;
-  background: #4c1d95;
+  background-color: #0b1120;
   background-image:
-    radial-gradient(at 18% 12%, #7c3aed 0px, transparent 55%),
-    radial-gradient(at 85% 8%, #db2777 0px, transparent 50%),
-    radial-gradient(at 75% 88%, #2563eb 0px, transparent 50%),
-    radial-gradient(at 12% 92%, #9333ea 0px, transparent 55%);
+    radial-gradient(130% 90% at 50% -15%, #1a2440 0%, transparent 60%),
+    radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: auto, 22px 22px;
   background-attachment: fixed;
 }
 
@@ -93,7 +92,7 @@ button {
 .glass {
   background: rgba(255, 255, 255, 0.97);
   backdrop-filter: blur(8px);
-  box-shadow: 0 20px 50px -12px rgba(30, 27, 75, 0.45);
+  box-shadow: 0 20px 50px -12px rgba(2, 6, 23, 0.6);
 }
 
 @keyframes pop-in {

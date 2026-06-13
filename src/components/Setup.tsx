@@ -21,7 +21,7 @@ export default function Setup({ initialOps, initialDifficulty, onStart, onBack }
   };
 
   return (
-    <div className="w-full animate-slide-up">
+    <div className="w-full my-auto animate-slide-up">
       <button
         onClick={onBack}
         className="mb-3 text-white/80 font-semibold text-sm flex items-center gap-1 active:scale-95"

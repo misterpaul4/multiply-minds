@@ -16,8 +16,8 @@ export default defineConfig(({ command }) => ({
         short_name: "Multiply Minds",
         description:
           "A fast, fun math arcade. Practice the four operations, chain combos, and challenge your friends.",
-        theme_color: "#4c1d95",
-        background_color: "#4c1d95",
+        theme_color: "#0b1120",
+        background_color: "#0b1120",
         display: "standalone",
         orientation: "portrait",
         categories: ["games", "education"],

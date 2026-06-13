@@ -102,7 +102,7 @@ export default function Results({ result, challenge, onPlayAgain, onHome }: Resu
   };
 
   return (
-    <div className="w-full animate-slide-up">
+    <div className="w-full my-auto animate-slide-up">
       <Confetti burstKey={burst} intensity={isNewBest || rank === 1 ? 1.8 : 1} />
 
       <div className="glass rounded-3xl p-6 text-center relative overflow-hidden">

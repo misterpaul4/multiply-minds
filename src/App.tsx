@@ -82,8 +82,8 @@ export default function App() {
   };
 
   return (
-    <div className="h-[100dvh] w-full overflow-hidden flex justify-center">
-      <div className="w-full max-w-md h-full overflow-y-auto overscroll-contain safe-pad flex flex-col">
+    <div className="h-[100dvh] w-full overflow-hidden flex justify-center md:items-center">
+      <div className="w-full max-w-md h-full md:h-[min(900px,94vh)] overflow-y-auto overscroll-contain safe-pad flex flex-col md:rounded-[2.25rem] md:shadow-2xl md:ring-1 md:ring-white/10">
         {screen === "home" && (
           <Home
             best={best}
