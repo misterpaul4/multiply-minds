@@ -1,125 +1,120 @@
-import { Carousel, Progress, Spin } from "antd";
-import PlayerCount from "./components/PlayerCount";
-import { useEffect, useRef, useState } from "react";
-import { CarouselRef } from "antd/es/carousel";
-import AnswerContext from "./app/states/answersContext";
-import { useRecoilState, useRecoilValue } from "recoil";
-import PlayerDetails from "./components/PlayerDetails";
-import configState, { numOfQuestions } from "./app/states/configAtom";
-import { slides } from "./utils/constants";
-import Final from "./components/Final";
-import { LoadingOutlined } from "@ant-design/icons";
+import { useEffect, useState } from "react";
+import Home from "./components/Home";
+import Setup from "./components/Setup";
+import Play from "./components/Play";
+import Results from "./components/Results";
+import { difficultyMeta } from "./game/engine";
+import { randomSeed } from "./game/engine";
+import { Challenge, DifficultyId, Operation, RoundConfig, RoundResult } from "./game/types";
+import { clearChallengeFromUrl, readChallengeFromUrl } from "./game/share";
+import { loadSettings, personalBest, saveSettings } from "./game/storage";
 
-function App() {
-  const [gameConfig] = useRecoilState(configState);
-  const NUM_OF_QUESTIONS = useRecoilValue(numOfQuestions);
-  const [loading, setLoading] = useState(false);
-  const [slide, setSlide] = useState(0);
+type Screen = "home" | "setup" | "play" | "results";
 
-  const ref = useRef<HTMLDivElement>(null);
+const DEFAULT_QUESTION_COUNT = 10;
+
+export default function App() {
+  const [screen, setScreen] = useState<Screen>("home");
+  const [config, setConfig] = useState<RoundConfig | null>(null);
+  const [result, setResult] = useState<RoundResult | null>(null);
+  const [challenge, setChallenge] = useState<Challenge | null>(null);
+  const [playedChallenge, setPlayedChallenge] = useState<Challenge | null>(null);
+  const [best, setBest] = useState(0);
+
+  const settings = loadSettings();
 
   useEffect(() => {
-    const removeDefaultTabbehaviour = (e: KeyboardEvent) => {
-      if (e.key === "Tab") {
-        e.preventDefault();
-      }
-    };
-    const reference = ref.current;
-
-    reference!.addEventListener("keydown", removeDefaultTabbehaviour);
-
-    return () =>
-      reference!.removeEventListener("keydown", removeDefaultTabbehaviour);
+    const c = readChallengeFromUrl();
+    if (c) {
+      setChallenge(c);
+      clearChallengeFromUrl();
+    }
+    setBest(personalBest());
   }, []);
 
-  const sliderRef = useRef<CarouselRef>(null);
+  const buildConfig = (
+    ops: Operation[],
+    difficulty: DifficultyId,
+    opts?: { seed?: number; questionCount?: number }
+  ): RoundConfig => ({
+    ops,
+    difficulty,
+    questionCount: opts?.questionCount ?? DEFAULT_QUESTION_COUNT,
+    seed: opts?.seed ?? randomSeed(),
+    timePerQuestion: difficultyMeta(difficulty).timePerQuestion,
+  });
 
-  const totalPlayers = gameConfig.playerCount ?? 0;
-  const totalGames = (totalPlayers ?? 1) * NUM_OF_QUESTIONS;
-
-  const gameRunning = slide > slides.PLAYER_DETAILS && slide < totalGames + 3;
-
-  const nextSlide = (delay = false) => {
-    if (delay) {
-      setLoading(true);
-      setTimeout(() => {
-        setSlide((current) => current + 1);
-        sliderRef.current?.next();
-        setLoading(false);
-      }, 1000);
-    } else {
-      setSlide((current) => current + 1);
-      sliderRef.current?.next();
-    }
+  const startFromSetup = (ops: Operation[], difficulty: DifficultyId) => {
+    saveSettings({ ops, difficulty });
+    setPlayedChallenge(null);
+    setConfig(buildConfig(ops, difficulty));
+    setScreen("play");
   };
 
-  const prevSlide = () => {
-    setSlide((current) => current - 1);
-    sliderRef.current?.prev();
+  const acceptChallenge = () => {
+    if (!challenge) return;
+    setPlayedChallenge(challenge);
+    setConfig(
+      buildConfig(challenge.ops, challenge.difficulty, {
+        seed: challenge.seed,
+        questionCount: challenge.questionCount,
+      })
+    );
+    setScreen("play");
   };
 
-  const goToSlide = (val: number, delay = false) => {
-    if (delay) {
-      setLoading(true);
-      setTimeout(() => {
-        setSlide(val);
-        sliderRef.current?.goTo(val);
-        setLoading(false);
-      }, 1000);
-    } else {
-      setSlide(val);
-      sliderRef.current?.goTo(val);
-    }
+  const onComplete = (r: RoundResult) => {
+    setResult(r);
+    setBest(personalBest());
+    setScreen("results");
   };
 
-  const getpercent = () => {
-    if (slide > slides.PLAYER_DETAILS) {
-      return ((slide - slides.GAME_START) / totalGames) * 100;
-    }
+  const playAgain = () => {
+    if (!config) return;
+    setPlayedChallenge(null);
+    setConfig(buildConfig(config.ops, config.difficulty));
+    setScreen("play");
+  };
 
-    return 0;
+  const goHome = () => {
+    setBest(personalBest());
+    setScreen("home");
   };
 
   return (
-    <div className="pt-2" style={{ display: "grid", placeItems: "center" }}>
-      <div className="content-container p-5" ref={ref}>
-        {gameRunning && (
-          <>
-            <Progress
-              status={
-                slide < totalGames + slides.GAME_START ? "active" : "success"
-              }
-              percent={getpercent()}
-              className="progress mb-4"
-              showInfo={false}
-            />
-          </>
+    <div className="h-[100dvh] w-full overflow-hidden flex justify-center">
+      <div className="w-full max-w-md h-full overflow-y-auto overscroll-contain safe-pad flex flex-col">
+        {screen === "home" && (
+          <Home
+            best={best}
+            challenge={challenge}
+            onPlay={() => setScreen("setup")}
+            onAcceptChallenge={acceptChallenge}
+          />
         )}
-        <Spin indicator={<LoadingOutlined />} spinning={loading}>
-          <AnswerContext.Provider
-            value={{
-              goToSlide,
-              nextSlide,
-              prevSlide,
-              currentSlide: slide,
-            }}
-          >
-            <Carousel
-              ref={sliderRef}
-              dots={false}
-              effect={slide > slides.PLAYER_DETAILS ? "scrollx" : "fade"}
-            >
-              <PlayerCount />
-              <PlayerDetails />
-              {gameConfig.Questions}
-              <Final />
-            </Carousel>
-          </AnswerContext.Provider>
-        </Spin>
+
+        {screen === "setup" && (
+          <Setup
+            initialOps={settings?.ops ?? ["add", "sub"]}
+            initialDifficulty={settings?.difficulty ?? "easy"}
+            onStart={startFromSetup}
+            onBack={() => setScreen("home")}
+          />
+        )}
+
+        {screen === "play" && config && (
+          <Play config={config} onComplete={onComplete} onQuit={goHome} />
+        )}
+
+        {screen === "results" && result && (
+          <Results
+            result={result}
+            challenge={playedChallenge}
+            onPlayAgain={playAgain}
+            onHome={goHome}
+          />
+        )}
       </div>
     </div>
   );
 }
-
-export default App;
-
